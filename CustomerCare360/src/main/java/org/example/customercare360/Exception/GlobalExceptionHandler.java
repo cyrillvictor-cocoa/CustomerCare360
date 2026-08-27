@@ -8,16 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(
-            ResourceNotFoundException ex) {
-
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.NOT_FOUND
-        );
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(
             Exception ex) {
@@ -27,4 +17,50 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class) //ResourceNotFoundException
+    public ResponseEntity<String> handleResourceNotFoundException(
+            ResourceNotFoundException ex) {
+
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.NOT_FOUND
+        );
+    }
+
+
+
+    @ExceptionHandler(IllegalArgumentException.class) //InvalidRequestException
+    public ResponseEntity<String> handleInvalidRequestException(
+            IllegalArgumentException ex) {
+
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(org.springframework.dao.DuplicateKeyException.class) //DuplicateResourceException
+    public ResponseEntity<String> handleDuplicateResourceException(
+            org.springframework.dao.DuplicateKeyException ex) {
+
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(IllegalStateException.class) // OperationNotAllowedException
+    public ResponseEntity<String> handleOperationNotAllowedException(
+            IllegalStateException ex) {
+
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.CONFLICT
+        );
+    }
+
+
+
+
 }

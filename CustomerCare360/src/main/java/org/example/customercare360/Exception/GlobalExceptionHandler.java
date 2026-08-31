@@ -1,5 +1,7 @@
 package org.example.customercare360.Exception;
 
+import jakarta.persistence.ElementCollection;
+import org.example.customercare360.DTO.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,58 +10,30 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException(
-            Exception ex) {
-
-        return new ResponseEntity<>(
-                "An unexpected error occurred: " + ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+    @ExceptionHandler(UserNameExists.class)
+    public ResponseEntity<Response> UserNameExists(UserNameExists ex){
+        return new ResponseEntity<>(new Response(ex.getMessage(),null),HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class) //ResourceNotFoundException
-    public ResponseEntity<String> handleResourceNotFoundException(
-            ResourceNotFoundException ex) {
-
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.NOT_FOUND
-        );
+    @ExceptionHandler(EmailExists.class)
+    public ResponseEntity<Response> EmailExists(EmailExists ex){
+        return new ResponseEntity<>(new Response(ex.getMessage(),null),HttpStatus.CONFLICT);
     }
 
-
-
-    @ExceptionHandler(IllegalArgumentException.class) //InvalidRequestException
-    public ResponseEntity<String> handleInvalidRequestException(
-            IllegalArgumentException ex) {
-
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.BAD_REQUEST
-        );
+    @ExceptionHandler(UserNameNotFound.class)
+    public ResponseEntity<Response> UserNameNotFound(UserNameNotFound ex){
+        return new ResponseEntity<>(new Response(ex.getMessage(),null),HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(org.springframework.dao.DuplicateKeyException.class) //DuplicateResourceException
-    public ResponseEntity<String> handleDuplicateResourceException(
-            org.springframework.dao.DuplicateKeyException ex) {
-
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.CONFLICT
-        );
+    @ExceptionHandler(PasswordInValid.class)
+    public ResponseEntity<Response> PasswordInvalid(PasswordInValid ex){
+        return new ResponseEntity<>(new Response(ex.getMessage(),null),HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(IllegalStateException.class) // OperationNotAllowedException
-    public ResponseEntity<String> handleOperationNotAllowedException(
-            IllegalStateException ex) {
-
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.CONFLICT
-        );
+    @ExceptionHandler(InvalidToken.class)
+    public ResponseEntity<Response> InvalidToken(InvalidToken ex){
+        return new ResponseEntity<>(new Response(ex.getMessage(),null),HttpStatus.UNAUTHORIZED);
     }
-
 
 
 

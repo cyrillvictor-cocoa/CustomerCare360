@@ -1,0 +1,33 @@
+package org.example.customercare360.DTO;
+
+public class HelpDeskDashboard {
+
+    private String name;
+    private String path;
+
+    public HelpDeskDashboard() {
+    }
+
+    public HelpDeskDashboard(String name, String path) {
+        this.name = name;
+        this.path = path;
+    }
+
+
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+}

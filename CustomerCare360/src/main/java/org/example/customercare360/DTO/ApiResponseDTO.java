@@ -1,4 +1,4 @@
-package org.example.customercare360.dto;
+package org.example.customercare360.DTO;
 
 public class ApiResponseDTO {
 

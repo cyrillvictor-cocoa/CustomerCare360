@@ -33,39 +33,57 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
-            if(!request.getServletPath().equals("/auth/register") && !request.getServletPath().equals("/auth/login")){
-                try {
-                    String authHeader =
-                            request.getHeader("Authorization");
 
-                    if (authHeader != null &&
-                            authHeader.startsWith("Bearer ")) {
+        String path = request.getServletPath();
 
-                        String token = authHeader.substring(7);
-
-                        if (jwtService.validateToken(token)) {
-
-                            String username =
-                                    jwtService.extractUserName(token);
-
-                            UsernamePasswordAuthenticationToken auth =
-                                    new UsernamePasswordAuthenticationToken(
-                                            username,
-                                            null,
-                                            Collections.emptyList());
-                            {
-                                SecurityContextHolder.getContext()
-                                        .setAuthentication(auth);
-                            }
-                        }
-                    }else throw new InvalidToken("Authorization Token missing");
-                } catch (InvalidToken e) {
-                    resolver.resolveException(request,response,null,e);
-                }
-            }
+        // Public endpoints + Swagger endpoints
+        if (path.equals("/auth/register")
+                || path.equals("/auth/login")
+                || path.startsWith("/swagger-ui")
+                || path.equals("/swagger-ui.html")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-resources")
+                || path.startsWith("/webjars")) {
 
             filterChain.doFilter(request, response);
+            return;
+        }
 
+        try {
 
+            String authHeader = request.getHeader("Authorization");
+
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+
+                String token = authHeader.substring(7);
+
+                if (jwtService.validateToken(token)) {
+
+                    String username =
+                            jwtService.extractUserName(token);
+
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(
+                                    username,
+                                    null,
+                                    Collections.emptyList());
+
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(auth);
+
+                } else {
+                    throw new InvalidToken("Invalid Token");
+                }
+
+            } else {
+                throw new InvalidToken("Authorization Token missing");
+            }
+
+        } catch (InvalidToken e) {
+            resolver.resolveException(request, response, null, e);
+            return;
+        }
+
+        filterChain.doFilter(request, response);
     }
 }

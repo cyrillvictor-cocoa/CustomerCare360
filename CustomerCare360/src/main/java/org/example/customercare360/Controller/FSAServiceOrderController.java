@@ -2,12 +2,8 @@ package org.example.customercare360.Controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.example.customercare360.Services.ServiceOrderService;
-import org.example.customercare360.dto.AssignedServiceOrderResponseDTO;
-import org.example.customercare360.dto.ServiceOrderDTO;
-import  org.example.customercare360.dto.ApiResponseDTO;
-import org.example.customercare360.dto.AcceptServiceOrderDTO;
-import org.example.customercare360.dto.RejectServiceOrderDTO;
+import org.example.customercare360.DTO.*;
+import org.example.customercare360.Services.FSAServiceOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +16,10 @@ import java.util.List;
         name = "Service Order APIs",
         description = "FSA Service Order Operations"
 )
-public class ServiceOrderController {
+public class FSAServiceOrderController {
 
     @Autowired
-    private ServiceOrderService service;
+    private FSAServiceOrderService service;
 
     @Operation(
             summary = "Get Assigned Service Orders",
@@ -44,6 +40,13 @@ public class ServiceOrderController {
                 status,
                 priority,
                 utilityType);
+    }
+
+    @PatchMapping("/update-status-availability")
+    public ApiResponseDTO updateStatusAvailability(
+            @RequestBody UpdateStatusAvailabilityDTO request) {
+
+        return service.updateStatusAvailability(request);
     }
 
     @Operation(

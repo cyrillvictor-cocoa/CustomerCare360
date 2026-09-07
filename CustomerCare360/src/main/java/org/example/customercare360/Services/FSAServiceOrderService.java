@@ -1,14 +1,10 @@
 package org.example.customercare360.Services;
 
-import org.example.customercare360.dto.AssignedServiceOrderResponseDTO;
-import org.example.customercare360.dto.ServiceOrderDTO;
-import org.example.customercare360.dto.AcceptServiceOrderDTO;
-import org.example.customercare360.dto.RejectServiceOrderDTO;
-import org.example.customercare360.dto.ApiResponseDTO;
-
+import org.example.customercare360.DTO.*;
+import org.example.customercare360.DTO.UpdateStatusAvailabilityDTO;
 import java.util.List;
 
-public interface ServiceOrderService {
+public interface FSAServiceOrderService {
 
     AssignedServiceOrderResponseDTO getAssignedOrders(
             Long agentId,
@@ -24,7 +20,7 @@ public interface ServiceOrderService {
 
     ApiResponseDTO rejectServiceOrder(
             RejectServiceOrderDTO request);
+
+    ApiResponseDTO updateStatusAvailability(
+            UpdateStatusAvailabilityDTO request);
 }
-
-
-

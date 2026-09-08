@@ -17,11 +17,11 @@ public class BillingController {
         this.billService = billService;
     }
 
-    @GetMapping("/customers/{customerId}/bills")
+    @GetMapping("/customers/{accountId}/bills")
     public List<BillResponse> getCustomerBills(
-            @PathVariable Integer customerId) {
+            @PathVariable Integer accountId) {
 
-        return billService.getCustomerBills(customerId);
+        return billService.getCustomerBills(accountId);
     }
 
     @GetMapping("/bills/{billId}/download")

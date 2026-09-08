@@ -18,9 +18,10 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<BillResponse> getCustomerBills(Integer customerId) {
+    public List<BillResponse> getCustomerBills(Integer accountId) {
 
-        List<Bill> bills = billRepository.findAll();
+        //List<Bill> bills = billRepository.findAll();
+        List<Bill> bills = billRepository.findByAccountId(accountId);
 
         List<BillResponse> responseList =
                 new ArrayList<>();
@@ -44,6 +45,7 @@ public class BillServiceImpl implements BillService {
 
         return responseList;
     }
+
 
     @Override
     public DownloadBillResponse downloadBill(

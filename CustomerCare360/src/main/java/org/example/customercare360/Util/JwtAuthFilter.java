@@ -9,6 +9,8 @@ import org.example.customercare360.Services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -33,7 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
-            if(!request.getServletPath().equals("/auth/register") && !request.getServletPath().equals("/auth/login")){
+            if(!request.getServletPath().equals("/login") && !request.getServletPath().equals("/signup")){
                 try {
                     String authHeader =
                             request.getHeader("Authorization");
@@ -48,11 +51,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             String username =
                                     jwtService.extractUserName(token);
 
+                            String role = jwtService.extractRole(token);
+
+                            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
+
                             UsernamePasswordAuthenticationToken auth =
                                     new UsernamePasswordAuthenticationToken(
                                             username,
                                             null,
-                                            Collections.emptyList());
+                                            authorities);
                             {
                                 SecurityContextHolder.getContext()
                                         .setAuthentication(auth);

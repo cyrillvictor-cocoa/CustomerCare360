@@ -5,6 +5,8 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.example.customercare360.Entity.User;
+import org.example.customercare360.Enums.Role;
 import org.example.customercare360.Exception.InvalidToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,13 +27,17 @@ public class JwtService {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
-    public String generateToken(String username){
-        return Jwts.builder().subject(username).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis()+86400000))
+    public String generateToken(User user){
+        return Jwts.builder().subject(user.getUserName()).claim("role",user.getRole().name()).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis()+86400000))
                 .signWith(getSignKey()).compact();
     }
 
     public String extractUserName(String token){
         return Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token).getPayload().getSubject();
+    }
+
+    public String extractRole(String token){
+        return Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token).getPayload().get("role",String.class);
     }
 
     public boolean validateToken(String token)throws JwtException,InvalidToken {

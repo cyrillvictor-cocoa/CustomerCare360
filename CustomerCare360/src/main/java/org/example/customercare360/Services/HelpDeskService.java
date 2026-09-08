@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface HelpDeskService {
 
-    List<HelpDeskDashboard> getDashboard();
 
     List<FaqResponse> getFaqs();
 

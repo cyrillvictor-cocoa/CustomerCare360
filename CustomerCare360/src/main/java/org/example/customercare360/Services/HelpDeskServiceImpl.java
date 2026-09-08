@@ -20,20 +20,7 @@ public class HelpDeskServiceImpl implements HelpDeskService {
     @Autowired
     private BillAdjustmentRepository billAdjustmentRepository;
 
-    @Override
-    public List<HelpDeskDashboard> getDashboard() {
 
-        return List.of(
-                new HelpDeskDashboard(
-                        "FAQ",
-                        "/api/v1/helpdesk/faqs"
-                ),
-                new HelpDeskDashboard(
-                        "Complaints",
-                        "/api/v1/helpdesk/complaints"
-                )
-        );
-    }
 
     @Override
     public List<FaqResponse> getFaqs() {

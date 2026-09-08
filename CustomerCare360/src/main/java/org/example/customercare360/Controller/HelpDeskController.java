@@ -14,10 +14,7 @@ public class HelpDeskController {
     @Autowired
     private HelpDeskService helpDeskService;
 
-    @GetMapping("/dashboard")
-    public Object getDashboard() {
-        return helpDeskService.getDashboard();
-    }
+
 
     @GetMapping("/faqs")
     public List<FaqResponse> getFaqs() {

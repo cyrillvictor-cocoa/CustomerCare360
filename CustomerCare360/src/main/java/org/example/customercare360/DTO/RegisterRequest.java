@@ -1,6 +1,10 @@
 package org.example.customercare360.DTO;
 
 
+import org.example.customercare360.Entity.Customer;
+import org.example.customercare360.Enums.CustomerType;
+import org.example.customercare360.Enums.Role;
+
 public class RegisterRequest {
 
     private String name;
@@ -8,6 +12,8 @@ public class RegisterRequest {
     private String phone;
     private String userName;
     private String password;
+    private Role role;
+    private CustomerType customerType;
 
     public RegisterRequest() {
     }
@@ -51,4 +57,12 @@ public class RegisterRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public Role getRole(){return role;}
+
+    public void setRole(Role role){this.role = role;}
+
+    public CustomerType getCustomerType(){return customerType;}
+
+    public void setCustomerType(CustomerType type){this.customerType = type;}
 }

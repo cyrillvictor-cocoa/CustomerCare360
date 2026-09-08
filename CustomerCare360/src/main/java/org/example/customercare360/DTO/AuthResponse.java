@@ -1,14 +1,18 @@
 package org.example.customercare360.DTO;
 
-public class Response {
+public class AuthResponse {
 
     private String message;
     private String token;
+    private String role;
 
-    public Response() {
+    public AuthResponse(String msg, String token, String role) {
+        this.message = msg;
+        this.token = token;
+        this.role = role;
     }
 
-    public Response(String message, String token) {
+    public AuthResponse(String message, String token) {
         this.message = message;
         this.token = token;
     }
@@ -28,4 +32,8 @@ public class Response {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getRole(){return role;}
+
+    public void setRole(String role){this.role = role;}
 }

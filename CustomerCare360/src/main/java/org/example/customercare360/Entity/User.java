@@ -1,6 +1,8 @@
 package org.example.customercare360.Entity;
 import jakarta.persistence.*;
+import org.example.customercare360.Enums.Role;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.naming.Name;
@@ -27,11 +29,17 @@ public class User implements UserDetails {
     private String userName;
 
     private String password; // BCrypt encrypted password
-    @Column(name="CreatedBy")
-    private Integer createdBy;
 
-    @Column(name="ModifiedBy")
-    private Integer modifiedBy;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "CreatedBy")
+    private User createdBy;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "ModifiedBy")
+    private User modifiedBy;
 
     public void setUserName(String userName){this.userName = userName;}
 
@@ -43,9 +51,13 @@ public class User implements UserDetails {
 
     public void setPassword(String password){this.password = password;}
 
-    public void setCreatedBy(Integer createdBy){this.createdBy = createdBy;}
+    public void setRole(Role role){this.role = role;}
 
-    public void setModifiedBy(Integer modifiedBy){this.modifiedBy = modifiedBy;}
+    public void setCreatedBy(User createdBy){this.createdBy = createdBy;}
+
+    public void setModifiedBy(User modifiedBy){this.modifiedBy = modifiedBy;}
+
+    public Integer getUserId(){return userId;}
 
     public String getName(){return name;}
 
@@ -53,14 +65,13 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_"+role));
     }
 
     public String getPassword(){return password;}
 
     @Override
     public String getUsername() {
-        //return "";
         return userName;
     }
 
@@ -88,8 +99,10 @@ public class User implements UserDetails {
 
     public String getPhone(){return phone;}
 
-    public Integer getCreatedBy(){return createdBy;}
+    public Role getRole(){return role;}
 
-    public Integer getModifiedBy(){return modifiedBy;}
+    public User getCreatedBy(){return createdBy;}
+
+    public User getModifiedBy(){return modifiedBy;}
 
 }

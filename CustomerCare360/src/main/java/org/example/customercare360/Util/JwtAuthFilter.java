@@ -9,6 +9,8 @@ import org.example.customercare360.Services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -33,57 +36,43 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
+            if(!request.getServletPath().equals("/login") && !request.getServletPath().equals("/signup")){
+                try {
+                    String authHeader =
+                            request.getHeader("Authorization");
 
-        String path = request.getServletPath();
+                    if (authHeader != null &&
+                            authHeader.startsWith("Bearer ")) {
 
-        // Public endpoints + Swagger endpoints
-        if (path.equals("/auth/register")
-                || path.equals("/auth/login")
-                || path.startsWith("/swagger-ui")
-                || path.equals("/swagger-ui.html")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/swagger-resources")
-                || path.startsWith("/webjars")) {
+                        String token = authHeader.substring(7);
 
-            filterChain.doFilter(request, response);
-            return;
-        }
+                        if (jwtService.validateToken(token)) {
 
-        try {
+                            String username =
+                                    jwtService.extractUserName(token);
 
-            String authHeader = request.getHeader("Authorization");
+                            String role = jwtService.extractRole(token);
 
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
 
-                String token = authHeader.substring(7);
-
-                if (jwtService.validateToken(token)) {
-
-                    String username =
-                            jwtService.extractUserName(token);
-
-                    UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(
-                                    username,
-                                    null,
-                                    Collections.emptyList());
-
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(auth);
-
-                } else {
-                    throw new InvalidToken("Invalid Token");
+                            UsernamePasswordAuthenticationToken auth =
+                                    new UsernamePasswordAuthenticationToken(
+                                            username,
+                                            null,
+                                            authorities);
+                            {
+                                SecurityContextHolder.getContext()
+                                        .setAuthentication(auth);
+                            }
+                        }
+                    }else throw new InvalidToken("Authorization Token missing");
+                } catch (InvalidToken e) {
+                    resolver.resolveException(request,response,null,e);
                 }
-
-            } else {
-                throw new InvalidToken("Authorization Token missing");
             }
 
-        } catch (InvalidToken e) {
-            resolver.resolveException(request, response, null, e);
-            return;
-        }
+            filterChain.doFilter(request, response);
 
-        filterChain.doFilter(request, response);
+
     }
 }

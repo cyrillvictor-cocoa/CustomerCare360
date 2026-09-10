@@ -27,8 +27,9 @@ CREATE TABLE IF NOT EXISTS `customercare360`.`user` (
   `phone` VARCHAR(20) NULL DEFAULT NULL,
   `UserName` VARCHAR(255) NULL DEFAULT NULL,
   `password` VARCHAR(255) NOT NULL,
-  `CreatedBy` BIGINT NULL DEFAULT NULL,
-  `ModifiedBy` BIGINT NULL DEFAULT NULL,
+  `CreatedBy` INT NULL DEFAULT NULL,
+  `ModifiedBy` INT NULL DEFAULT NULL,
+  `Role` ENUM('ADMIN', 'USER', 'AGENT', 'BILL_OPT') NOT NULL,
   PRIMARY KEY (`UserId`),
   UNIQUE INDEX `UserName_UNIQUE` (`UserName` ASC) VISIBLE,
   UNIQUE INDEX `Phone_UNIQUE` (`phone` ASC) VISIBLE,
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `customercare360`.`user` (
   INDEX `CreatedBy_User_FK_idx` (`CreatedBy` ASC) VISIBLE,
   INDEX `Modified_User_FK_idx` (`ModifiedBy` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
+AUTO_INCREMENT = 8
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -77,18 +78,20 @@ CREATE TABLE IF NOT EXISTS `customercare360`.`customer` (
   `CreatedBy` INT NULL DEFAULT NULL,
   `ModifiedBy` INT NULL DEFAULT NULL,
   PRIMARY KEY (`CustomerId`),
-  UNIQUE INDEX `UserId_UNIQUE` (`UserId` ASC) VISIBLE,
-  INDEX `fk_Customer_User1_idx` (`UserId` ASC) VISIBLE,
+  INDEX `ModifiedBy_Customer_FK_idx` (`ModifiedBy` ASC) VISIBLE,
+  INDEX `CreatedBy_Customer_FK_idx` (`CreatedBy` ASC) VISIBLE,
+  INDEX `fk_Customer_User1` (`UserId` ASC) VISIBLE,
   CONSTRAINT `CreatedBy_Customer_FK`
-    FOREIGN KEY (`UserId`)
+    FOREIGN KEY (`CreatedBy`)
     REFERENCES `customercare360`.`user` (`UserId`),
   CONSTRAINT `fk_Customer_User1`
     FOREIGN KEY (`UserId`)
     REFERENCES `customercare360`.`user` (`UserId`),
   CONSTRAINT `ModifiedBy_Customer_FK`
-    FOREIGN KEY (`UserId`)
+    FOREIGN KEY (`ModifiedBy`)
     REFERENCES `customercare360`.`user` (`UserId`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -132,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `customercare360`.`serviceaccount` (
   `StartDate` DATETIME NOT NULL,
   `ServiceType` ENUM('ELECTRICITY', 'WATER', 'GAS') NOT NULL,
   `EndDate` DATETIME NULL DEFAULT NULL,
-  `Status` ENUM('ENERGIZED', 'DISCONNECTED') NULL DEFAULT NULL,
+  `Status` ENUM('ACTIVE', 'SUSPENDED', 'CLOSED') NULL DEFAULT NULL,
   `PremiseID` INT NOT NULL,
   `CreatedBy` INT NULL DEFAULT NULL,
   `ModifiedBy` INT NULL DEFAULT NULL,
@@ -312,6 +315,76 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
+-- Table `customercare360`.`provider`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `customercare360`.`provider` (
+  `provider_id` INT NOT NULL AUTO_INCREMENT,
+  `provider_name` VARCHAR(100) NOT NULL,
+  `contact` VARCHAR(100) NOT NULL,
+  `address` VARCHAR(300) NOT NULL,
+  `region` VARCHAR(100) NOT NULL,
+  `status` TINYINT NOT NULL,
+  PRIMARY KEY (`provider_id`),
+  UNIQUE INDEX `provider_name_UNIQUE` (`provider_name` ASC) VISIBLE,
+  UNIQUE INDEX `contact_UNIQUE` (`contact` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `customercare360`.`utilitytype`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `customercare360`.`utilitytype` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `utilitytype_name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `utilitytype_id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `ProviderUtility_utility_fk_idx` (`utilitytype_name` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `customercare360`.`providerutility`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `customercare360`.`providerutility` (
+  `providerutility_id` INT NOT NULL AUTO_INCREMENT,
+  `provider_id` INT NOT NULL,
+  `utilitytype_id` INT NOT NULL,
+  PRIMARY KEY (`providerutility_id`),
+  UNIQUE INDEX `providerutility_id_UNIQUE` (`providerutility_id` ASC) VISIBLE,
+  INDEX `providerutility_provider_fk_idx` (`provider_id` ASC) VISIBLE,
+  INDEX `providerutility_utilitytype_fk_idx` (`utilitytype_id` ASC) VISIBLE,
+  CONSTRAINT `providerutility_provider_fk`
+    FOREIGN KEY (`provider_id`)
+    REFERENCES `customercare360`.`provider` (`provider_id`),
+  CONSTRAINT `providerutility_utilitytype_fk`
+    FOREIGN KEY (`utilitytype_id`)
+    REFERENCES `customercare360`.`utilitytype` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `customercare360`.`service`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `customercare360`.`service` (
+  `service_id` INT NOT NULL AUTO_INCREMENT,
+  `service_name` VARCHAR(100) NOT NULL,
+  `provider_id` INT NOT NULL,
+  `pricepercycle` DOUBLE NOT NULL,
+  `cycleperiod` INT NOT NULL,
+  PRIMARY KEY (`service_id`),
+  UNIQUE INDEX `service_id_UNIQUE` (`service_id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
 -- Table `customercare360`.`serviceorder`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `customercare360`.`serviceorder` (
@@ -319,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `customercare360`.`serviceorder` (
   `ServiceAccountID` INT NOT NULL,
   `PremiseId` INT NOT NULL,
   `OrderType` ENUM('CONNECT', 'DISCONNECT', 'INSPECTION') NOT NULL,
-  `SchduledDate` DATETIME NULL DEFAULT NULL,
+  `ScheduledDate` DATETIME NULL DEFAULT NULL,
   `CompletionDate` DATETIME NULL DEFAULT NULL,
   `Status` ENUM('SCHEDULED', 'INPROGRESS', 'COMPLETED', 'FAILED') NOT NULL COMMENT 'FOR THE FIELD AGENT TO VIEW THE ORDERS',
   `AssignedTo` INT NULL DEFAULT NULL,

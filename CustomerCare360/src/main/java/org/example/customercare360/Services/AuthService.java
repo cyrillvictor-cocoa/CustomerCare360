@@ -41,14 +41,14 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request)throws EmailExists,UserNameExists,NullCustomerType{
             if(userRepository.existsByEmail(request.getEmail())) throw new EmailExists("User already registered using this email");
-            if(userRepository.existsByUserName(request.getUserName())) throw new UserNameExists("UserName is already registered");
+            if(userRepository.existsByUsername(request.getUsername())) throw new UserNameExists("UserName is already registered");
             if(request.getRole() == Role.USER && request.getCustomerType()==null) throw new NullCustomerType("CustomerType cant be null!!");
             User user  = new User();
 
             user.setName(request.getName());
             user.setEmail(request.getEmail());
             user.setPhone(request.getPhone());
-            user.setUserName(request.getUserName());
+            user.setUsername(request.getUsername());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setRole(request.getRole());
             userRepository.save(user);
@@ -64,15 +64,15 @@ public class AuthService {
 
     }
 
-    public AuthResponse login (LoginRequest request) throws UserNameNotFound,PasswordInValid{
+    public AuthResponse login (LoginRequest request) throws UserNotFound,PasswordInValid{
         try{
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(),request.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
             User user =(User) authentication.getPrincipal();
             return new AuthResponse("Logged In Successfull",jwtService.generateToken(user),user.getRole().name());
         }catch (BadCredentialsException ex){
             throw new PasswordInValid(ex.getMessage());
-        }catch (UserNameNotFound ex){
-            throw new UserNameNotFound(ex.getMessage());
+        }catch (UserNotFound ex){
+            throw new UserNotFound(ex.getMessage());
         }
 
     }

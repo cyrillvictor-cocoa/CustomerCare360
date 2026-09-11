@@ -54,7 +54,7 @@ public class FSAServiceOrderController {
             description = "Retrieve all service requests from database"
     )
     @GetMapping("/all")
-    public List<ServiceOrderDTO> getAllServiceOrders() {
+    public List<FSAServiceOrderDTO> getAllServiceOrders() {
 
         return service.getAllServiceOrders();
     }

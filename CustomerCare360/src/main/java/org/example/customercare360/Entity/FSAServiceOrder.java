@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "serviceorder")
-public class ServiceOrder {
+public class FSAServiceOrder {
 
     @Id
     @Column(name = "OrderId")
@@ -13,6 +13,15 @@ public class ServiceOrder {
 
     @Column(name = "ServiceAccountID")
     private Integer serviceAccountId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "ServiceAccountID",
+            referencedColumnName = "AccountId",
+            insertable = false,
+            updatable = false
+    )
+    private ServiceAccount serviceAccount;
 
     @Column(name = "PremiseId")
     private Integer premiseId;
@@ -32,13 +41,22 @@ public class ServiceOrder {
     @Column(name = "AssignedTo")
     private Integer assignedTo;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "AssignedTo",
+            referencedColumnName = "UserId",
+            insertable = false,
+            updatable = false
+    )
+    private User assignedUser;
+
     @Column(name = "CreatedBy")
     private Integer createdBy;
 
     @Column(name = "ModifiedBy")
     private Integer modifiedBy;
 
-    public ServiceOrder() {
+    public FSAServiceOrder() {
     }
 
     public Integer getOrderId() {
@@ -55,6 +73,14 @@ public class ServiceOrder {
 
     public void setServiceAccountId(Integer serviceAccountId) {
         this.serviceAccountId = serviceAccountId;
+    }
+
+    public ServiceAccount getServiceAccount() {
+        return serviceAccount;
+    }
+
+    public void setServiceAccount(ServiceAccount serviceAccount) {
+        this.serviceAccount = serviceAccount;
     }
 
     public Integer getPremiseId() {
@@ -103,6 +129,14 @@ public class ServiceOrder {
 
     public void setAssignedTo(Integer assignedTo) {
         this.assignedTo = assignedTo;
+    }
+
+    public User getAssignedUser() {
+        return assignedUser;
+    }
+
+    public void setAssignedUser(User assignedUser) {
+        this.assignedUser = assignedUser;
     }
 
     public Integer getCreatedBy() {

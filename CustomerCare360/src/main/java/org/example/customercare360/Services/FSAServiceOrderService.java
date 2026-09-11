@@ -13,7 +13,7 @@ public interface FSAServiceOrderService {
             String priority,
             String utilityType);
 
-    List<ServiceOrderDTO> getAllServiceOrders();
+    List<FSAServiceOrderDTO> getAllServiceOrders();
 
     ApiResponseDTO acceptServiceOrder(
             AcceptServiceOrderDTO request);

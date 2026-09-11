@@ -1,6 +1,6 @@
 package org.example.customercare360.DTO;
 
-public class ServiceOrderDTO {
+public class FSAServiceOrderDTO {
 
     private String serviceOrderId;
     private String serviceOrderName;

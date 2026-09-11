@@ -5,8 +5,8 @@ import org.example.customercare360.DTO.ApiResponseDTO;
 import org.example.customercare360.DTO.AssignedServiceOrderDTO;
 import org.example.customercare360.DTO.AssignedServiceOrderResponseDTO;
 import org.example.customercare360.DTO.RejectServiceOrderDTO;
-import org.example.customercare360.DTO.ServiceOrderDTO;
-import org.example.customercare360.Entity.ServiceOrder;
+import org.example.customercare360.DTO.FSAServiceOrderDTO;
+import org.example.customercare360.Entity.FSAServiceOrder;
 import org.example.customercare360.Repository.FSAServiceOrderRepo;
 import org.example.customercare360.DTO.UpdateStatusAvailabilityDTO;
 import java.util.Optional;
@@ -39,12 +39,12 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
 
         if (agentId != null) {
 
-            List<ServiceOrder> dbOrders =
+            List<FSAServiceOrder> dbOrders =
                     fsaServiceOrderRepo.findByAssignedTo(
                             agentId.intValue()
                     );
 
-            for (ServiceOrder order : dbOrders) {
+            for (FSAServiceOrder order : dbOrders) {
 
                 AssignedServiceOrderDTO dto =
                         new AssignedServiceOrderDTO();
@@ -57,7 +57,10 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
                         order.getStatus()
                 );
 
-                dto.setCustomerName("");
+                dto.setCustomerName(
+                        "Customer-" + order.getServiceAccountId()
+                );
+
                 dto.setPriority("");
 
                 orders.add(dto);
@@ -76,18 +79,15 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
     }
 
     @Override
-    public List<ServiceOrderDTO> getAllServiceOrders() {
+    public List<FSAServiceOrderDTO> getAllServiceOrders() {
 
-        List<ServiceOrder> dbOrders =
-                fsaServiceOrderRepo.findAll();
+        List<FSAServiceOrder> dbOrders = fsaServiceOrderRepo.findAll();
 
-        List<ServiceOrderDTO> response =
-                new ArrayList<>();
+        List<FSAServiceOrderDTO> response = new ArrayList<>();
 
-        for (ServiceOrder order : dbOrders) {
+        for (FSAServiceOrder order : dbOrders) {
 
-            ServiceOrderDTO dto =
-                    new ServiceOrderDTO();
+            FSAServiceOrderDTO dto = new FSAServiceOrderDTO();
 
             dto.setServiceOrderId(
                     String.valueOf(order.getOrderId())
@@ -101,11 +101,61 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
                     order.getOrderType()
             );
 
-            dto.setCustomerId("");
-            dto.setCustomerName("");
-            dto.setServiceOrderName("");
-            dto.setFieldServiceAgentId("");
-            dto.setFieldServiceAgentName("");
+            dto.setCustomerId(
+                    String.valueOf(order.getServiceAccount().getCustomerId())
+            );
+
+            // Customer Name
+            try {
+
+                if (order.getServiceAccount() != null
+                        && order.getServiceAccount().getCustomer() != null
+                        && order.getServiceAccount().getCustomer().getUser() != null) {
+
+                    dto.setCustomerName(
+                            order.getServiceAccount()
+                                    .getCustomer()
+                                    .getUser()
+                                    .getName()
+                    );
+
+                } else {
+
+                    dto.setCustomerName("N/A");
+                }
+
+            } catch (Exception e) {
+
+                dto.setCustomerName("N/A");
+            }
+
+            dto.setServiceOrderName(
+                    order.getOrderType()
+            );
+
+            dto.setFieldServiceAgentId(
+                    String.valueOf(order.getAssignedTo())
+            );
+
+            // Agent Name
+            try {
+
+                if (order.getAssignedUser() != null) {
+
+                    dto.setFieldServiceAgentName(
+                            order.getAssignedUser().getName()
+                    );
+
+                } else {
+
+                    dto.setFieldServiceAgentName("N/A");
+                }
+
+            } catch (Exception e) {
+
+                dto.setFieldServiceAgentName("N/A");
+            }
+
             dto.setFieldServiceAgentAssigned(
                     order.getAssignedTo() != null
             );
@@ -127,7 +177,7 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
                             request.getServiceOrderId()
                     );
 
-            ServiceOrder order =
+            FSAServiceOrder order =
                     fsaServiceOrderRepo
                             .findById(orderId)
                             .orElse(null);
@@ -169,7 +219,7 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
                             request.getServiceOrderId()
                     );
 
-            ServiceOrder order =
+            FSAServiceOrder order =
                     fsaServiceOrderRepo
                             .findById(orderId)
                             .orElse(null);
@@ -209,7 +259,7 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
             Integer orderId =
                     Integer.parseInt(request.getWorkOrderId());
 
-            Optional<ServiceOrder> optionalOrder =
+            Optional<FSAServiceOrder> optionalOrder =
                     fsaServiceOrderRepo.findById(orderId);
 
             if (optionalOrder.isEmpty()) {
@@ -220,7 +270,7 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
                 );
             }
 
-            ServiceOrder serviceOrder =
+            FSAServiceOrder serviceOrder =
                     optionalOrder.get();
 
             serviceOrder.setStatus(

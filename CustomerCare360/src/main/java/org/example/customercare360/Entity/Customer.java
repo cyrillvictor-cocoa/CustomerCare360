@@ -5,7 +5,7 @@ import org.example.customercare360.Enums.CustomerStatus;
 import org.example.customercare360.Enums.CustomerType;
 
 @Entity
-@Table(name="customer")
+@Table(name = "customer")
 public class Customer {
 
     @Id
@@ -21,10 +21,14 @@ public class Customer {
     private String contactInfo;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "Status")
     private CustomerStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserId",referencedColumnName = "UserId")
+    @JoinColumn(
+            name = "UserId",
+            referencedColumnName = "UserId"
+    )
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,31 +39,59 @@ public class Customer {
     @JoinColumn(name = "ModifiedBy")
     private User modifiedBy;
 
-    public Integer getCustomerId(){return customerId;}
+    public Integer getCustomerId() {
+        return customerId;
+    }
 
-    public String getCustomerType(){return customerType.name();}
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
 
-    public String getContactInfo(){return contactInfo;}
+    public CustomerType getCustomerType() {
+        return customerType;
+    }
 
-    public String getStatus(){return status.name();}
+    public void setCustomerType(CustomerType customerType) {
+        this.customerType = customerType;
+    }
 
-    public User getUser(){return user;}
+    public String getContactInfo() {
+        return contactInfo;
+    }
 
-    public User getCreatedBy(){return createdBy;}
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
+    }
 
-    public User getModifiedBy(){return modifiedBy;}
+    public CustomerStatus getStatus() {
+        return status;
+    }
 
-    public void setCustomerId(Integer id){this.customerId = id;}
+    public void setStatus(CustomerStatus status) {
+        this.status = status;
+    }
 
-    public void setCustomerType(CustomerType type){this.customerType = type;}
+    public User getUser() {
+        return user;
+    }
 
-    public void setContactInfo(String contact){this.contactInfo = contact;}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    public void setStatus(CustomerStatus status){this.status = status;}
+    public User getCreatedBy() {
+        return createdBy;
+    }
 
-    public void setUser(User user){this.user = user;}
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 
-    public void setCreatedBy(User createdBy){this.createdBy = createdBy;}
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
 
-    public void setModifiedBy(User modifiedBy){this.modifiedBy = modifiedBy;}
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 }

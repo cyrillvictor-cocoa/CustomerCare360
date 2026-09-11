@@ -26,14 +26,9 @@ public class BillingCycleServiceImpl
 
         BillingCycle cycle = new BillingCycle();
 
-        cycle.setServiceType(
-                request.getServiceType());
-
-        cycle.setPeriodStart(
-                request.getPeriodStart());
-
-        cycle.setPeriodEnd(
-                request.getPeriodEnd());
+        cycle.setServiceType(request.getServiceType());
+        cycle.setPeriodStart(request.getPeriodStart());
+        cycle.setPeriodEnd(request.getPeriodEnd());
 
         return repository.save(cycle);
     }
@@ -49,18 +44,11 @@ public class BillingCycleServiceImpl
             Integer cycleId,
             BillingCycleRequest request){
 
-        BillingCycle cycle =
-                repository.findById(cycleId)
-                        .orElseThrow();
+        BillingCycle cycle = repository.findById(cycleId).orElseThrow();
 
-        cycle.setServiceType(
-                request.getServiceType());
-
-        cycle.setPeriodStart(
-                request.getPeriodStart());
-
-        cycle.setPeriodEnd(
-                request.getPeriodEnd());
+        cycle.setServiceType(request.getServiceType());
+        cycle.setPeriodStart(request.getPeriodStart());
+        cycle.setPeriodEnd(request.getPeriodEnd());
 
         repository.save(cycle);
 

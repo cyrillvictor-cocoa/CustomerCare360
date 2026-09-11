@@ -2,6 +2,7 @@ package org.example.customercare360.Services;
 
 import org.example.customercare360.DTO.*;
 import org.example.customercare360.Entity.Bill;
+import org.example.customercare360.Enums.BillStatus;
 import org.example.customercare360.Repository.BillRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,28 +19,39 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    public String createBill(CreateBillRequest request) {
+
+        Bill bill = new Bill();
+
+        bill.setAccountId(request.getAccountId());
+        bill.setCycleId(request.getCycleId());
+        bill.setUsage(request.getUsage());
+        bill.setAmount(request.getAmount());
+        bill.setDueDate(request.getDueDate());
+        bill.setStatus(BillStatus.GENERATED);
+
+        billRepository.save(bill);
+
+        return "Bill Created Successfully";
+    }
+
+    @Override
     public List<BillResponse> getCustomerBills(Integer accountId) {
 
-        //List<Bill> bills = billRepository.findAll();
         List<Bill> bills = billRepository.findByAccountId(accountId);
 
-        List<BillResponse> responseList =
-                new ArrayList<>();
+        List<BillResponse> responseList = new ArrayList<>();
 
         for(Bill bill : bills){
 
-            BillResponse response =
-                    new BillResponse();
+            BillResponse response = new BillResponse();
 
-            response.setBillId(
-                    bill.getBillId());
-
-            response.setAmount(
-                    bill.getAmount());
-
-            response.setStatus(
-                    bill.getStatus().name());
-
+            response.setBillId(bill.getBillId());
+            response.setAccountId(bill.getAccountId());
+            response.setUsage(bill.getUsage());
+            response.setAmount(bill.getAmount());
+            response.setDueDate(bill.getDueDate());
+            response.setStatus(bill.getStatus().name());
             responseList.add(response);
         }
 
@@ -48,57 +60,23 @@ public class BillServiceImpl implements BillService {
 
 
     @Override
-    public DownloadBillResponse downloadBill(
-            Integer billId) {
-
-//        Bill bill=
-//                billRepository.findById(billId)
-//                        .orElseThrow();
-        Bill bill = billRepository.findById(billId)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Bill not found with id "
-                                        + billId));
-
-        DownloadBillResponse response =
-                new DownloadBillResponse();
-
-        response.setBillId(billId);
-
-        response.setFileName(
-                "Bill_"+billId+".pdf"
-        );
-
-        response.setDownloadUrl(
-                "/documents/bills/Bill_"
-                        +billId+".pdf"
-        );
-
-        return response;
-    }
-
-    @Override
     public List<BillResponse> getAllBills() {
 
-        List<Bill> bills =
-                billRepository.findAll();
+        List<Bill> bills = billRepository.findAll();
 
-        List<BillResponse> response =
-                new ArrayList<>();
+        List<BillResponse> response = new ArrayList<>();
 
-        for(Bill bill:bills){
+        for (Bill bill : bills) {
 
-            BillResponse dto =
-                    new BillResponse();
+            BillResponse dto = new BillResponse();
 
-            dto.setBillId(
-                    bill.getBillId());
-
-            dto.setAmount(
-                    bill.getAmount());
-
-            dto.setStatus(
-                    bill.getStatus().name());
+            dto.setBillId(bill.getBillId());
+            dto.setAccountId(bill.getAccountId());
+            //dto.setCycleId(bill.getCycleId());
+            dto.setUsage(bill.getUsage());
+            dto.setAmount(bill.getAmount());
+            dto.setDueDate(bill.getDueDate());
+            dto.setStatus(bill.getStatus().name());
 
             response.add(dto);
         }
@@ -111,18 +89,11 @@ public class BillServiceImpl implements BillService {
             Integer billId,
             UpdateBillRequest request) {
 
-        Bill bill =
-                billRepository.findById(billId)
-                        .orElseThrow();
+        Bill bill = billRepository.findById(billId).orElseThrow();
 
-        bill.setUsage(
-                request.getUsage());
-
-        bill.setAmount(
-                request.getAmount());
-
-        bill.setDueDate(
-                request.getDueDate());
+        bill.setUsage(request.getUsage());
+        bill.setAmount(request.getAmount());
+        bill.setDueDate(request.getDueDate());
 
         billRepository.save(bill);
 

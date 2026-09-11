@@ -1,7 +1,6 @@
 package org.example.customercare360.Controller;
 
 import org.example.customercare360.DTO.BillResponse;
-import org.example.customercare360.DTO.DownloadBillResponse;
 import org.example.customercare360.Services.BillService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +23,4 @@ public class BillingController {
         return billService.getCustomerBills(accountId);
     }
 
-    @GetMapping("/bills/{billId}/download")
-    public DownloadBillResponse downloadBill(
-            @PathVariable Integer billId) {
-
-        return billService.downloadBill(billId);
-    }
 }

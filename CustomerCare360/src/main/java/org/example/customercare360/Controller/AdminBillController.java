@@ -1,6 +1,7 @@
 package org.example.customercare360.Controller;
 
 import org.example.customercare360.DTO.BillResponse;
+import org.example.customercare360.DTO.CreateBillRequest;
 import org.example.customercare360.DTO.UpdateBillRequest;
 import org.example.customercare360.Services.BillService;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,13 @@ public class AdminBillController {
 
     public AdminBillController(BillService billService) {
         this.billService = billService;
+    }
+
+    @PostMapping("/add")
+    public String createBill(
+            @RequestBody CreateBillRequest request) {
+
+        return billService.createBill(request);
     }
 
     @GetMapping

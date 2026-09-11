@@ -9,10 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
-@Table(name = "user")
 @Getter
 @Setter
+@Entity
+@Table(name = "user")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
 
     @Id

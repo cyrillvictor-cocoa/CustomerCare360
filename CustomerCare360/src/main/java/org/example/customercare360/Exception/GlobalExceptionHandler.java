@@ -30,8 +30,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UserNameNotFound.class)
-    public ResponseEntity<String> UserNameNotFound(UserNameNotFound ex){
+    @ExceptionHandler(UserNotFound.class)
+    public ResponseEntity<String> UserNameNotFound(UserNotFound ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 
@@ -59,6 +59,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleServiceOrderNotFound(ServiceOrderNotFoundException ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(NotificationNotFound.class)
+    public ResponseEntity<String> NotificationIdNotFound(NotificationNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(ServiceNotFoundException.class)
     public ResponseEntity<String>handleServiceNotFound(ServiceNotFoundException ex) {
@@ -66,4 +70,3 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 }
-

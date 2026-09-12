@@ -1,26 +1,17 @@
 package org.example.customercare360.DTO;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class LoginRequest {
 
-    private String userName;
+    private String username;
     private String password;
 
     public LoginRequest() {
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

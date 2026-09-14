@@ -1,18 +1,17 @@
 package org.example.customercare360.Services;
 
-import org.example.customercare360.DTO.AcceptServiceOrderDTO;
-import org.example.customercare360.DTO.ApiResponseDTO;
-import org.example.customercare360.DTO.AssignedServiceOrderDTO;
-import org.example.customercare360.DTO.AssignedServiceOrderResponseDTO;
-import org.example.customercare360.DTO.RejectServiceOrderDTO;
-import org.example.customercare360.DTO.FSAServiceOrderDTO;
+import org.example.customercare360.DTO.*;
 import org.example.customercare360.Entity.FSAServiceOrder;
+import org.example.customercare360.Exception.AgentNotFound;
+import org.example.customercare360.Exception.NoServiceOrdersFound;
 import org.example.customercare360.Repository.FSAServiceOrderRepo;
-import org.example.customercare360.DTO.UpdateStatusAvailabilityDTO;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
+import org.example.customercare360.Services.FSAServiceOrderService;
+import org.example.customercare360.Exception.CustomerNotFound;
+import org.example.customercare360.Exception.OrderTypeNotFound;
+import org.example.customercare360.Exception.ServiceAccountNotFound;
+import org.example.customercare360.Exception.AgentNameNotFound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,6 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
     @Autowired
     private FSAServiceOrderRepo fsaServiceOrderRepo;
 
-    @Override
     public AssignedServiceOrderResponseDTO getAssignedOrders(
             Long agentId,
             String assignmentDate,
@@ -37,51 +35,81 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
         List<AssignedServiceOrderDTO> orders =
                 new ArrayList<>();
 
-        if (agentId != null) {
+        List<FSAServiceOrder> dbOrders =
+                fsaServiceOrderRepo.findByAgentId(agentId.intValue()).orElseThrow(() ->
+                                new AgentNotFound(
+                                        "There is no Agent with id " + agentId
+                                )
+                        );
 
-            List<FSAServiceOrder> dbOrders =
-                    fsaServiceOrderRepo.findByAssignedTo(
-                            agentId.intValue()
-                    );
-
-            for (FSAServiceOrder order : dbOrders) {
-
-                AssignedServiceOrderDTO dto =
-                        new AssignedServiceOrderDTO();
-
-                dto.setOrderId(
-                        String.valueOf(order.getOrderId())
-                );
-
-                dto.setStatus(
-                        order.getStatus()
-                );
-
-                dto.setCustomerName(
-                        "Customer-" + order.getServiceAccountId()
-                );
-
-                dto.setPriority("");
-
-                orders.add(dto);
-            }
+        if (dbOrders.isEmpty()) {
+            throw new NoServiceOrdersFound(
+                    "No Service Orders Assigned To Agent Id " + agentId
+            );
         }
 
-        response.setTotalRecords(
-                orders.size()
-        );
+        for (FSAServiceOrder order : dbOrders) {
 
-        response.setServiceOrders(
-                orders
-        );
+            if (order.getCustomerName() == null ||
+                    order.getCustomerName().isBlank()) {
+
+                throw new CustomerNotFound(
+                        "Customer Not Found For Order Id "
+                                + order.getOrderId()
+                );
+            }
+
+            if (order.getAccountId() == null) {
+
+                throw new ServiceAccountNotFound(
+                        "Service Account Not Found For Order Id "
+                                + order.getOrderId()
+                );
+            }
+
+            if (order.getAgentName() == null ||
+                    order.getAgentName().isBlank()) {
+
+                throw new AgentNameNotFound(
+                        "Agent Name Not Found For Agent Id "
+                                + order.getAgentId()
+                );
+            }
+
+            if (order.getOrderType() == null ||
+                    order.getOrderType().isBlank()) {
+
+                throw new OrderTypeNotFound(
+                        "Order Type Missing For Order Id "
+                                + order.getOrderId()
+                );
+            }
+
+            AssignedServiceOrderDTO dto = new AssignedServiceOrderDTO();
+
+            dto.setOrderId(String.valueOf(order.getOrderId()));
+
+            dto.setStatus(order.getOrderStatus());
+
+            dto.setCustomerName(order.getCustomerName());
+
+            orders.add(dto);
+        }
+
+        response.setTotalRecords(orders.size());
+
+        response.setServiceOrders(orders);
 
         return response;
     }
 
-    @Override
     public List<FSAServiceOrderDTO> getAllServiceOrders() {
 
-        List<FSAServiceOrder> dbOrders = fsaServiceOrderRepo.findAll();
+        List<FSAServiceOrder> dbOrders =
+                fsaServiceOrderRepo.findAll();
+
+        if (dbOrders.isEmpty()) {throw new NoServiceOrdersFound("No Service Orders Found");
+        }
 
         List<FSAServiceOrderDTO> response = new ArrayList<>();
 
@@ -89,77 +117,35 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
 
             FSAServiceOrderDTO dto = new FSAServiceOrderDTO();
 
-            dto.setServiceOrderId(
-                    String.valueOf(order.getOrderId())
-            );
+            dto.setOrderId(Long.valueOf(order.getOrderId()));
 
-            dto.setServiceOrderStatus(
-                    order.getStatus()
-            );
+            dto.setOrderStatus(order.getOrderStatus());
 
-            dto.setServiceOrderType(
-                    order.getOrderType()
-            );
+            dto.setOrderType(order.getOrderType());
 
-            dto.setCustomerId(
-                    String.valueOf(order.getServiceAccount().getCustomerId())
-            );
+            dto.setAgentId(order.getAgentId() != null ? Long.valueOf(order.getAgentId()) : null);
 
-            // Customer Name
-            try {
+            dto.setScheduledDate(order.getScheduledDate() != null ? order.getScheduledDate().toString() : null);
 
-                if (order.getServiceAccount() != null
-                        && order.getServiceAccount().getCustomer() != null
-                        && order.getServiceAccount().getCustomer().getUser() != null) {
+            dto.setCompletionDate(order.getCompletionDate() != null ? order.getCompletionDate().toString() : null);
 
-                    dto.setCustomerName(
-                            order.getServiceAccount()
-                                    .getCustomer()
-                                    .getUser()
-                                    .getName()
-                    );
+            dto.setAgentName(order.getAgentName());
 
-                } else {
+            dto.setAccountId(Long.valueOf(order.getAccountId()));
 
-                    dto.setCustomerName("N/A");
-                }
+            dto.setServiceType(String.valueOf(order.getServiceType()));
 
-            } catch (Exception e) {
+            dto.setServiceType(String.valueOf(order.getServiceType()));
 
-                dto.setCustomerName("N/A");
-            }
+            dto.setAccountStatus(String.valueOf(order.getAccountStatus()));
 
-            dto.setServiceOrderName(
-                    order.getOrderType()
-            );
+            dto.setAccountStatus(String.valueOf(order.getAccountStatus()));
 
-            dto.setFieldServiceAgentId(
-                    String.valueOf(order.getAssignedTo())
-            );
+// dto.setCustomerId(Long.valueOf(order.getServiceAccount().getCustomerId()));
 
-            // Agent Name
-            try {
+            dto.setCustomerName(order.getCustomerName());
 
-                if (order.getAssignedUser() != null) {
-
-                    dto.setFieldServiceAgentName(
-                            order.getAssignedUser().getName()
-                    );
-
-                } else {
-
-                    dto.setFieldServiceAgentName("N/A");
-                }
-
-            } catch (Exception e) {
-
-                dto.setFieldServiceAgentName("N/A");
-            }
-
-            dto.setFieldServiceAgentAssigned(
-                    order.getAssignedTo() != null
-            );
-
+            dto.setCustomerPhone(order.getCustomerPhone());
             response.add(dto);
         }
 
@@ -167,129 +153,17 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
     }
 
     @Override
-    public ApiResponseDTO acceptServiceOrder(
-            AcceptServiceOrderDTO request) {
-
-        try {
-
-            Integer orderId =
-                    Integer.parseInt(
-                            request.getServiceOrderId()
-                    );
-
-            FSAServiceOrder order =
-                    fsaServiceOrderRepo
-                            .findById(orderId)
-                            .orElse(null);
-
-            if (order == null) {
-
-                return new ApiResponseDTO(
-                        404,
-                        "Service Order Not Found"
-                );
-            }
-
-            order.setStatus("INPROGRESS");
-
-            fsaServiceOrderRepo.save(order);
-
-            return new ApiResponseDTO(
-                    200,
-                    "Accepted the Service Order"
-            );
-
-        } catch (Exception e) {
-
-            return new ApiResponseDTO(
-                    500,
-                    e.getMessage()
-            );
-        }
+    public ApiResponseDTO acceptServiceOrder(AcceptServiceOrderDTO request) {
+        return null;
     }
 
     @Override
-    public ApiResponseDTO rejectServiceOrder(
-            RejectServiceOrderDTO request) {
-
-        try {
-
-            Integer orderId =
-                    Integer.parseInt(
-                            request.getServiceOrderId()
-                    );
-
-            FSAServiceOrder order =
-                    fsaServiceOrderRepo
-                            .findById(orderId)
-                            .orElse(null);
-
-            if (order == null) {
-
-                return new ApiResponseDTO(
-                        404,
-                        "Service Order Not Found"
-                );
-            }
-
-            order.setStatus("FAILED");
-
-            fsaServiceOrderRepo.save(order);
-
-            return new ApiResponseDTO(
-                    200,
-                    "Rejected the Service Order : "
-                            + request.getServiceOrderId()
-            );
-
-        } catch (Exception e) {
-
-            return new ApiResponseDTO(
-                    500,
-                    e.getMessage()
-            );
-        }
+    public ApiResponseDTO rejectServiceOrder(RejectServiceOrderDTO request) {
+        return null;
     }
+
     @Override
-    public ApiResponseDTO updateStatusAvailability(
-            UpdateStatusAvailabilityDTO request) {
-
-        try {
-
-            Integer orderId =
-                    Integer.parseInt(request.getWorkOrderId());
-
-            Optional<FSAServiceOrder> optionalOrder =
-                    fsaServiceOrderRepo.findById(orderId);
-
-            if (optionalOrder.isEmpty()) {
-
-                return new ApiResponseDTO(
-                        404,
-                        "Service Order Not Found"
-                );
-            }
-
-            FSAServiceOrder serviceOrder =
-                    optionalOrder.get();
-
-            serviceOrder.setStatus(
-                    request.getServiceOrderStatus()
-            );
-
-            fsaServiceOrderRepo.save(serviceOrder);
-
-            return new ApiResponseDTO(
-                    200,
-                    "Status updated successfully"
-            );
-
-        } catch (Exception e) {
-
-            return new ApiResponseDTO(
-                    500,
-                    e.getMessage()
-            );
-        }
+    public ApiResponseDTO updateStatusAvailability(UpdateStatusAvailabilityDTO request) {
+        return null;
     }
 }

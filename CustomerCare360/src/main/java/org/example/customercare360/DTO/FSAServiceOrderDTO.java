@@ -2,38 +2,36 @@ package org.example.customercare360.DTO;
 
 public class FSAServiceOrderDTO {
 
-    private String serviceOrderId;
-    private String serviceOrderName;
-    private String customerId;
+    private Long orderId;
+    private Long customerId;
     private String customerName;
-    private String serviceOrderType;
-    private String serviceOrderRequestDate;
-    private String serviceOrderStatus;
-    private Boolean fieldServiceAgentAssigned;
-    private String fieldServiceAgentId;
-    private String fieldServiceAgentName;
+    private String customerPhone;
 
-    public String getServiceOrderId() {
-        return serviceOrderId;
+    private Long accountId;
+    private String serviceType;
+    private String accountStatus;
+
+    private String orderType;
+    private String scheduledDate;
+    private String completionDate;
+    private String orderStatus;
+
+    private Long agentId;
+    private String agentName;
+
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setServiceOrderId(String serviceOrderId) {
-        this.serviceOrderId = serviceOrderId;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
-    public String getServiceOrderName() {
-        return serviceOrderName;
-    }
-
-    public void setServiceOrderName(String serviceOrderName) {
-        this.serviceOrderName = serviceOrderName;
-    }
-
-    public String getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(String customerId) {
+    public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 
@@ -45,51 +43,83 @@ public class FSAServiceOrderDTO {
         this.customerName = customerName;
     }
 
-    public String getServiceOrderType() {
-        return serviceOrderType;
+    public String getCustomerPhone() {
+        return customerPhone;
     }
 
-    public void setServiceOrderType(String serviceOrderType) {
-        this.serviceOrderType = serviceOrderType;
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
     }
 
-    public String getServiceOrderRequestDate() {
-        return serviceOrderRequestDate;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setServiceOrderRequestDate(String serviceOrderRequestDate) {
-        this.serviceOrderRequestDate = serviceOrderRequestDate;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
-    public String getServiceOrderStatus() {
-        return serviceOrderStatus;
+    public String getServiceType() {
+        return serviceType;
     }
 
-    public void setServiceOrderStatus(String serviceOrderStatus) {
-        this.serviceOrderStatus = serviceOrderStatus;
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
     }
 
-    public Boolean getFieldServiceAgentAssigned() {
-        return fieldServiceAgentAssigned;
+    public String getAccountStatus() {
+        return accountStatus;
     }
 
-    public void setFieldServiceAgentAssigned(Boolean fieldServiceAgentAssigned) {
-        this.fieldServiceAgentAssigned = fieldServiceAgentAssigned;
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
     }
 
-    public String getFieldServiceAgentId() {
-        return fieldServiceAgentId;
+    public String getOrderType() {
+        return orderType;
     }
 
-    public void setFieldServiceAgentId(String fieldServiceAgentId) {
-        this.fieldServiceAgentId = fieldServiceAgentId;
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 
-    public String getFieldServiceAgentName() {
-        return fieldServiceAgentName;
+    public String getScheduledDate() {
+        return scheduledDate;
     }
 
-    public void setFieldServiceAgentName(String fieldServiceAgentName) {
-        this.fieldServiceAgentName = fieldServiceAgentName;
+    public void setScheduledDate(String scheduledDate) {
+        this.scheduledDate = scheduledDate;
+    }
+
+    public String getCompletionDate() {
+        return completionDate;
+    }
+
+    public void setCompletionDate(String completionDate) {
+        this.completionDate = completionDate;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Long getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
+    }
+
+    public String getAgentName() {
+        return agentName;
+    }
+
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
     }
 }

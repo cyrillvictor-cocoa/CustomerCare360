@@ -79,10 +79,7 @@ public class FSAServiceOrderServiceImpl implements FSAServiceOrderService {
             if (order.getOrderType() == null ||
                     order.getOrderType().isBlank()) {
 
-                throw new OrderTypeNotFound(
-                        "Order Type Missing For Order Id "
-                                + order.getOrderId()
-                );
+                throw new OrderTypeNotFound("Order Type Missing For Order Id " + order.getOrderId());
             }
 
             AssignedServiceOrderDTO dto = new AssignedServiceOrderDTO();

@@ -66,3 +66,4 @@ public class Customer {
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
     }
+}

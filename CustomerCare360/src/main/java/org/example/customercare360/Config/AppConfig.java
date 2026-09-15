@@ -1,6 +1,6 @@
 package org.example.customercare360.Config;
 
-import org.example.customercare360.Exception.UserNameNotFound;
+import org.example.customercare360.Exception.UserNotFound;
 import org.example.customercare360.Repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class AppConfig {
 
     @Bean
     UserDetailsService userDetailsService(){
-        return username-> userRepository.findByUserName(username).orElseThrow(()-> new UserNameNotFound("UserName is Incorrect!!"));
+        return username-> userRepository.findByUsername(username).orElseThrow(()-> new UserNotFound("UserName is Incorrect!!"));
     }
 
     @Bean

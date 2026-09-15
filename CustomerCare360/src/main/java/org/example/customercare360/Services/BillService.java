@@ -12,6 +12,8 @@ public interface BillService {
 
     List<BillResponse> getCustomerBills(Integer customerId);
 
+    BillResponse getBillById(Integer billId);
+
     List<BillResponse> getAllBills();
 
     String updateBill(Integer billId,

@@ -30,6 +30,13 @@ public class AdminBillController {
         return billService.getAllBills();
     }
 
+    @GetMapping("/{billId}")
+    public BillResponse getBillById(
+            @PathVariable Integer billId) {
+
+        return billService.getBillById(billId);
+    }
+
     @PutMapping("/{billId}")
     public String updateBill(
             @PathVariable Integer billId,

@@ -85,6 +85,27 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    public BillResponse getBillById(Integer billId) {
+
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Bill not found with id " + billId));
+
+        BillResponse dto = new BillResponse();
+
+        dto.setBillId(bill.getBillId());
+        dto.setAccountId(bill.getAccountId());
+        //dto.setCycleId(bill.getCycleId());
+        dto.setUsage(bill.getUsage());
+        dto.setAmount(bill.getAmount());
+        dto.setDueDate(bill.getDueDate());
+        dto.setStatus(bill.getStatus().name());
+
+        return dto;
+    }
+
+    @Override
     public String updateBill(
             Integer billId,
             UpdateBillRequest request) {

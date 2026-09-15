@@ -1,6 +1,5 @@
 package org.example.customercare360.Exception;
 
-import org.example.customercare360.DTO.AuthResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -25,8 +24,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UserNameNotFound.class)
-    public ResponseEntity<String> UserNameNotFound(UserNameNotFound ex){
+    @ExceptionHandler(UserNotFound.class)
+    public ResponseEntity<String> UserNameNotFound(UserNotFound ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 
@@ -45,5 +44,9 @@ public class GlobalExceptionHandler {
         return  ResponseEntity.badRequest().body(ex.getMessage());
     }
 
+    @ExceptionHandler(NotificationNotFound.class)
+    public ResponseEntity<String> NotificationIdNotFound(NotificationNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
 
 }

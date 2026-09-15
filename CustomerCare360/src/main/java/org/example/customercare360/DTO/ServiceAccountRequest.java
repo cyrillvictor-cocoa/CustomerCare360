@@ -1,50 +1,19 @@
-package org.example.customercare360.Entity;
+package org.example.customercare360.DTO;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "serviceaccount")
-public class ServiceAccount {
+public class ServiceAccountRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "AccountId")
-    private Integer accountId;
-
-    @Column(name = "CustomerId")
     private Integer customerId;
-
-    @Column(name = "StartDate")
     private LocalDateTime startDate;
-
-    @Column(name = "ServiceType")
     private String serviceType;
-
-    @Column(name = "EndDate")
     private LocalDateTime endDate;
-
-    @Column(name = "Status")
     private String status;
-
-    @Column(name = "PremiseID")
     private Integer premiseId;
-
-    @Column(name = "CreatedBy")
     private Integer createdBy;
-
-    @Column(name = "ModifiedBy")
     private Integer modifiedBy;
 
-    public ServiceAccount() {
-    }
-
-    public Integer getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
+    public ServiceAccountRequest() {
     }
 
     public Integer getCustomerId() {

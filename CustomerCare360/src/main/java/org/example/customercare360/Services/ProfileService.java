@@ -1,7 +1,14 @@
 package org.example.customercare360.Services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.example.customercare360.DTO.ProfileRequest;
+import org.example.customercare360.DTO.ProfileResponse;
+import org.example.customercare360.Entity.Customer;
 import org.example.customercare360.Entity.User;
 import org.example.customercare360.Exception.ResourceNotFoundException;
+import org.example.customercare360.Repository.CustomerRepository;
 import org.example.customercare360.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,36 +19,111 @@ public class ProfileService {
     @Autowired
     private UserRepository userRepository;
 
-    // CREATE PROFILE
-    public User createProfile(User user) {
-        return userRepository.save(user);
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    // GET ALL
+    public List<ProfileResponse> getAllProfiles() {
+
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    // VIEW PROFILE
-    public User getProfile(Integer userId) {
+    // GET BY ID
+    public ProfileResponse getProfile(Integer userId) {
 
-        return userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "User not found with id: " + userId));
+
+        return mapToResponse(user);
     }
 
-    // UPDATE PROFILE
-    public User updateProfile(
+    // UPDATE USER + CUSTOMER
+    public ProfileResponse updateProfile(
             Integer userId,
-            User updatedUser) {
+            ProfileRequest request) {
 
-        User existingUser = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "User not found with id: " + userId));
+        User existingUser =
+                userRepository.findById(userId)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "User not found with id: "
+                                                + userId));
 
-        existingUser.setName(updatedUser.getName());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPhone(updatedUser.getPhone());
-        existingUser.setUserName(updatedUser.getUserName());
-        existingUser.setModifiedBy(updatedUser.getModifiedBy());
+        // USER TABLE UPDATE
+        existingUser.setName(request.getName());
+        existingUser.setEmail(request.getEmail());
+        existingUser.setPhone(request.getPhone());
+        existingUser.setUserName(request.getUserName());
+        existingUser.setRole(request.getRole());
 
-        return userRepository.save(existingUser);
+        User updatedUser =
+                userRepository.save(existingUser);
+
+        // CUSTOMER TABLE UPDATE
+        Customer customer =
+                customerRepository.findByUser(updatedUser)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Customer not found for User Id: "
+                                                + userId));
+
+        customer.setContactInfo(
+                request.getContactInfo());
+
+        if (request.getCustomerType() != null) {
+            customer.setCustomerType(
+                    request.getCustomerType());
+        }
+
+        if (request.getStatus() != null) {
+            customer.setStatus(
+                    request.getStatus());
+        }
+
+        customerRepository.save(customer);
+
+        return mapToResponse(updatedUser);
+    }
+
+    // DELETE
+    public void deleteProfile(Integer userId) {
+
+        User existingUser =
+                userRepository.findById(userId)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "User not found with id: "
+                                                + userId));
+
+        Customer customer =
+                customerRepository.findByUser(existingUser)
+                        .orElse(null);
+
+        if (customer != null) {
+            customerRepository.delete(customer);
+        }
+
+        userRepository.delete(existingUser);
+    }
+
+    // DTO MAPPER
+    private ProfileResponse mapToResponse(User user) {
+
+        ProfileResponse response =
+                new ProfileResponse();
+
+        response.setUserId(user.getUserId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        response.setPhone(user.getPhone());
+        response.setUserName(user.getUserName());
+        response.setRole(user.getRole());
+
+        return response;
     }
 }

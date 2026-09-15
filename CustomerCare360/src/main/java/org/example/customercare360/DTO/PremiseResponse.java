@@ -1,41 +1,15 @@
-package org.example.customercare360.Entity;
+package org.example.customercare360.DTO;
 
-import jakarta.persistence.*;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+public class PremiseResponse {
 
-@Entity
-@Table(name = "Premise")
-public class Premise {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PremiseId")
     private Integer premiseId;
-
-    @Column(name = "Address")
     private String address;
-
-    @Column(name = "Region")
     private String region;
-
-    @Column(name = "MeterId")
     private Integer meterId;
-
-    @Column(name = "Status")
     private String status;
-
-    @Column(name = "CustomerId")
     private Integer customerId;
-
-    @Column(name = "CreatedBy")
     private Integer createdBy;
-
-    @Column(name = "ModifiedBy")
     private Integer modifiedBy;
-
-    public Premise() {
-    }
 
     public Integer getPremiseId() {
         return premiseId;

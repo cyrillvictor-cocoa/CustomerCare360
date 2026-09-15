@@ -28,7 +28,7 @@ public class JwtService {
     }
 
     public String generateToken(User user){
-        return Jwts.builder().subject(user.getUserName()).claim("role",user.getRole().name()).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis()+86400000))
+        return Jwts.builder().subject(user.getUsername()).claim("role",user.getRole().name()).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis()+86400000))
                 .signWith(getSignKey()).compact();
     }
 

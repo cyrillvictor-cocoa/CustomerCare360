@@ -1,9 +1,13 @@
 package org.example.customercare360.Entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.customercare360.Enums.CustomerStatus;
 import org.example.customercare360.Enums.CustomerType;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -62,36 +66,3 @@ public class Customer {
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
     }
-
-    public CustomerStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(CustomerStatus status) {
-        this.status = status;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public User getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(User modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-}

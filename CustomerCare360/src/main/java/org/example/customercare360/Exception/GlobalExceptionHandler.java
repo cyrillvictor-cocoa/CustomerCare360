@@ -1,8 +1,9 @@
 package org.example.customercare360.Exception;
 
+import jakarta.persistence.ElementCollection;
+import org.example.customercare360.DTO.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,8 +25,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UserNameNotFound.class)
-    public ResponseEntity<String> UserNameNotFound(UserNameNotFound ex){
+    @ExceptionHandler(UserNotFound.class)
+    public ResponseEntity<String> UserNameNotFound(UserNotFound ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 
@@ -35,6 +36,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidToken.class)
+    public ResponseEntity<String> InvalidToken(InvalidToken ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
     public ResponseEntity<String> InvalidToken(InvalidToken ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
     }
@@ -64,11 +67,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NullCustomerType.class)
+    public ResponseEntity<String> NullCustomerTYpe(NullCustomerType ex){
+        return  ResponseEntity.badRequest().body(ex.getMessage());
+    }
     @ExceptionHandler(CustomerNotFound.class)
     public ResponseEntity<String> handleCustomerNotFound(CustomerNotFound ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(NotificationNotFound.class)
+    public ResponseEntity<String> NotificationIdNotFound(NotificationNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
     @ExceptionHandler(ServiceAccountNotFound.class)
     public ResponseEntity<String> handleServiceAccountNotFound(ServiceAccountNotFound ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);

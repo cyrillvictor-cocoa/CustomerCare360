@@ -1,6 +1,9 @@
 package org.example.customercare360.Entity;
 import jakarta.persistence.*;
 import org.example.customercare360.Enums.Role;
+import lombok.Getter;
+import lombok.Setter;
+import org.example.customercare360.Enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,9 +12,11 @@ import javax.naming.Name;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "user")
-
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
 
     @Id
@@ -47,10 +52,16 @@ public class User implements UserDetails {
 
     public void setPhone(String phone){this.phone = phone;}
 
-    public void setName(String name){this.name = name;}
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public void setPassword(String password){this.password = password;}
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "CreatedBy")
+    private User createdBy;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "ModifiedBy")
+    private User modifiedBy;
     public void setRole(Role role){this.role = role;}
 
     public void setCreatedBy(User createdBy){this.createdBy = createdBy;}
@@ -67,8 +78,6 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_"+role));
     }
-
-    public String getPassword(){return password;}
 
     @Override
     public String getUsername() {

@@ -9,7 +9,7 @@ import org.example.customercare360.Enums.CustomerType;
 @Getter
 @Setter
 @Entity
-@Table(name="customer")
+@Table(name = "customer")
 @PrimaryKeyJoinColumn(name = "UserId")
 public class Customer extends User {
 
@@ -21,6 +21,7 @@ public class Customer extends User {
     private String contactInfo;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "Status")
     private CustomerStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)

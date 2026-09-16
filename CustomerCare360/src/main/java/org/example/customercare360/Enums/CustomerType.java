@@ -8,7 +8,7 @@ public enum CustomerType {
     INDUSTRIAL;
 
     @JsonCreator
-    public static CustomerType fromValue(String value){
+    public static CustomerType fromvalue(String value){
         return CustomerType.valueOf(value.toUpperCase());
     }
 }

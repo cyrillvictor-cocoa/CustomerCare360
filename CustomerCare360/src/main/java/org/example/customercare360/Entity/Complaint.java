@@ -34,6 +34,15 @@ public class Complaint {
     @Column(name = "ModifiedBy")
     private Integer modifiedBy;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "resolved_at")
+    private LocalDateTime resolvedAt;
+
+    @Column(name = "sla_hours")
+    private Integer slaHours;
+
     public Integer getComplaintId() {
         return complaintId;
     }
@@ -82,19 +91,27 @@ public class Complaint {
         this.status = status;
     }
 
-    public Integer getCreatedBy() {
-        return createdBy;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedBy(Integer createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Integer getModifiedBy() {
-        return modifiedBy;
+    public LocalDateTime getResolvedAt() {
+        return resolvedAt;
     }
 
-    public void setModifiedBy(Integer modifiedBy) {
-        this.modifiedBy = modifiedBy;
+    public void setResolvedAt(LocalDateTime resolvedAt) {
+        this.resolvedAt = resolvedAt;
+    }
+
+    public Integer getSlaHours() {
+        return slaHours;
+    }
+
+    public void setSlaHours(Integer slaHours) {
+        this.slaHours = slaHours;
     }
 }

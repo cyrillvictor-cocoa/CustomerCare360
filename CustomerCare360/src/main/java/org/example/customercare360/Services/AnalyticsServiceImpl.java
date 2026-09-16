@@ -166,6 +166,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         dto.setInactiveCustomers(inactiveCustomers);
 
+        dto.setChurnRate(
+                Math.round(churnRate * 100.0) / 100.0
+        );
 
         return dto;
     }

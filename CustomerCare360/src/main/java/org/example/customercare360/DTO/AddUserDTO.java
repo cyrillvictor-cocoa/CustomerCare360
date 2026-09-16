@@ -7,7 +7,7 @@ public class AddUserDTO {
     private String name;
     private String email;
     private String phone;
-    private String userName;
+    private String username;
     private String password;
     private Role role;
 
@@ -35,12 +35,12 @@ public class AddUserDTO {
         this.phone = phone;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getusername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setusername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

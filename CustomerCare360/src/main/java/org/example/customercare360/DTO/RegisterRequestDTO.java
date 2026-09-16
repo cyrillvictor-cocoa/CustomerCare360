@@ -1,18 +1,17 @@
 package org.example.customercare360.DTO;
 
 
-import org.example.customercare360.Entity.Customer;
 import org.example.customercare360.Enums.CustomerType;
 import org.example.customercare360.Enums.Role;
+import org.example.customercare360.Entity.User;
+import org.example.customercare360.Entity.Customer;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.customercare360.Enums.CustomerType;
-import org.example.customercare360.Enums.Role;
 
 @Getter
 @Setter
-public class RegisterRequest {
+public class RegisterRequestDTO {
 
     private String name;
     private String email;
@@ -22,7 +21,7 @@ public class RegisterRequest {
     private Role role;
     private CustomerType customerType;
 
-    public RegisterRequest() {
+    public RegisterRequestDTO() {
     }
 
     public String getName() {
@@ -49,13 +48,9 @@ public class RegisterRequest {
         this.phone = phone;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+//    public void setUserName(String userName) {
+//        this.userName = userName;
+//    }
 
     public String getPassword() {
         return password;
@@ -72,4 +67,9 @@ public class RegisterRequest {
     public CustomerType getCustomerType(){return customerType;}
 
     public void setCustomerType(CustomerType type){this.customerType = type;}
+
+    public String getUsername() {return username;}
+
+    public void setUsername(String username) {this.username = username;}
+
 }

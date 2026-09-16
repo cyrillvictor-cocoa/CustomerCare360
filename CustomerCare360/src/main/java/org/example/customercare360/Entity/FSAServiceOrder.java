@@ -35,7 +35,7 @@ public class FSAServiceOrder {
     @Column(name = "OrderType")
     private String orderType;
 
-    @Column(name = "SchduledDate")
+    @Column(name = "ScheduledDate")
     private LocalDateTime scheduledDate;
 
     private LocalDateTime completionDate;

@@ -28,7 +28,7 @@ public class AdminUserServiceImpl
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
-        user.setUserName(request.getUserName());
+        user.setUsername(request.getusername());
 
         user.setPassword(
                 passwordEncoder.encode(

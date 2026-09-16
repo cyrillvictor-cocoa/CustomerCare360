@@ -10,12 +10,8 @@ import org.example.customercare360.Enums.CustomerType;
 @Setter
 @Entity
 @Table(name = "customer")
-public class Customer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CustomerId")
-    private Integer customerId;
+@PrimaryKeyJoinColumn(name = "UserId")
+public class Customer extends User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "CustomerType")
@@ -29,41 +25,10 @@ public class Customer {
     private CustomerStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "UserId",
-            referencedColumnName = "UserId"
-    )
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CreatedBy")
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ModifiedBy")
     private User modifiedBy;
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
-    public CustomerType getCustomerType() {
-        return customerType;
-    }
-
-    public void setCustomerType(CustomerType customerType) {
-        this.customerType = customerType;
-    }
-
-    public String getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
-    }
 }

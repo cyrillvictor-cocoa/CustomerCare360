@@ -36,44 +36,44 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
-            String path = request.getServletPath();
+        String path = request.getServletPath();
 
-            if(!request.getServletPath().equals("/login") && !request.getServletPath().equals("/signup") && !path.startsWith("/swagger-ui") && !path.startsWith("/v3/api-docs") ){
-                try {
-                    String authHeader =
-                            request.getHeader("Authorization");
+        if(!request.getServletPath().equals("/login") && !request.getServletPath().equals("/signup") && !path.startsWith("/swagger-ui") && !path.startsWith("/v3/api-docs") ){
+            try {
+                String authHeader =
+                        request.getHeader("Authorization");
 
-                    if (authHeader != null &&
-                            authHeader.startsWith("Bearer ")) {
+                if (authHeader != null &&
+                        authHeader.startsWith("Bearer ")) {
 
-                        String token = authHeader.substring(7);
+                    String token = authHeader.substring(7);
 
-                        if (jwtService.validateToken(token)) {
+                    if (jwtService.validateToken(token)) {
 
-                            String username =
-                                    jwtService.extractUserName(token);
+                        String username =
+                                jwtService.extractUserName(token);
 
-                            String role = jwtService.extractRole(token);
+                        String role = jwtService.extractRole(token);
 
-                            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
+                        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
 
-                            UsernamePasswordAuthenticationToken auth =
-                                    new UsernamePasswordAuthenticationToken(
-                                            username,
-                                            null,
-                                            authorities);
-                            {
-                                SecurityContextHolder.getContext()
-                                        .setAuthentication(auth);
-                            }
+                        UsernamePasswordAuthenticationToken auth =
+                                new UsernamePasswordAuthenticationToken(
+                                        username,
+                                        null,
+                                        authorities);
+                        {
+                            SecurityContextHolder.getContext()
+                                    .setAuthentication(auth);
                         }
-                    }else throw new InvalidToken("Authorization Token missing");
-                } catch (InvalidToken e) {
-                    resolver.resolveException(request,response,null,e);
-                }
+                    }
+                }else throw new InvalidToken("Authorization Token missing");
+            } catch (InvalidToken e) {
+                resolver.resolveException(request,response,null,e);
             }
+        }
 
-            filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);
 
 
     }

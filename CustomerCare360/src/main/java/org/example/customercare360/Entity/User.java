@@ -30,8 +30,7 @@ public class User implements UserDetails {
 
     private String phone;
 
-    @Column(name ="UserName")
-    private String userName;
+    private String username;
 
     private String password; // BCrypt encrypted password
 
@@ -46,34 +45,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "ModifiedBy")
     private User modifiedBy;
 
-    public void setUserName(String userName){this.userName = userName;}
-
-    public void setEmail(String email){this.email = email;}
-
-    public void setPhone(String phone){this.phone = phone;}
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "CreatedBy")
-    private User createdBy;
-
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "ModifiedBy")
-    private User modifiedBy;
-    public void setRole(Role role){this.role = role;}
-
-    public void setCreatedBy(User createdBy){this.createdBy = createdBy;}
-
-    public void setModifiedBy(User modifiedBy){this.modifiedBy = modifiedBy;}
-
-    public Integer getUserId(){return userId;}
-
-    public String getName(){return name;}
-
-    public String getEmail(){return email;}
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_"+role));
@@ -81,7 +52,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override
@@ -104,14 +75,5 @@ public class User implements UserDetails {
         return UserDetails.super.isEnabled();
     }
 
-    public String getUserName(){return userName;}
-
-    public String getPhone(){return phone;}
-
-    public Role getRole(){return role;}
-
-    public User getCreatedBy(){return createdBy;}
-
-    public User getModifiedBy(){return modifiedBy;}
 
 }

@@ -11,6 +11,7 @@ import org.example.customercare360.Exception.ResourceNotFoundException;
 import org.example.customercare360.Repository.CustomerRepository;
 import org.example.customercare360.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +22,9 @@ public class ProfileService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // GET ALL
     public List<ProfileResponse> getAllProfiles() {
@@ -47,30 +51,19 @@ public class ProfileService {
             Integer userId,
             ProfileRequest request) {
 
-        User existingUser =
-                userRepository.findById(userId)
+        Customer customer =
+                customerRepository.findById(userId)
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "User not found with id: "
                                                 + userId));
 
         // USER TABLE UPDATE
-        existingUser.setName(request.getName());
-        existingUser.setEmail(request.getEmail());
-        existingUser.setPhone(request.getPhone());
-        existingUser.setUserName(request.getUserName());
-        existingUser.setRole(request.getRole());
-
-        User updatedUser =
-                userRepository.save(existingUser);
-
-        // CUSTOMER TABLE UPDATE
-        Customer customer =
-                customerRepository.findByUser(updatedUser)
-                        .orElseThrow(() ->
-                                new ResourceNotFoundException(
-                                        "Customer not found for User Id: "
-                                                + userId));
+        customer.setName(request.getName());
+        customer.setEmail(request.getEmail());
+        customer.setPhone(request.getPhone());
+        customer.setUsername(request.getUserName());
+        customer.setRole(request.getRole());
 
         customer.setContactInfo(
                 request.getContactInfo());
@@ -85,7 +78,17 @@ public class ProfileService {
                     request.getStatus());
         }
 
-        customerRepository.save(customer);
+        // PASSWORD UPDATE
+        if (request.getPassword() != null
+                && !request.getPassword().isBlank()) {
+
+            customer.setPassword(
+                    passwordEncoder.encode(
+                            request.getPassword()));
+        }
+
+        User updatedUser =
+                userRepository.save(customer);
 
         return mapToResponse(updatedUser);
     }
@@ -93,22 +96,11 @@ public class ProfileService {
     // DELETE
     public void deleteProfile(Integer userId) {
 
-        User existingUser =
-                userRepository.findById(userId)
-                        .orElseThrow(() ->
-                                new ResourceNotFoundException(
-                                        "User not found with id: "
-                                                + userId));
-
         Customer customer =
-                customerRepository.findByUser(existingUser)
+                customerRepository.findById(userId)
                         .orElse(null);
 
-        if (customer != null) {
-            customerRepository.delete(customer);
-        }
-
-        userRepository.delete(existingUser);
+        userRepository.delete(customer);
     }
 
     // DTO MAPPER
@@ -121,7 +113,7 @@ public class ProfileService {
         response.setName(user.getName());
         response.setEmail(user.getEmail());
         response.setPhone(user.getPhone());
-        response.setUserName(user.getUserName());
+        response.setUserName(user.getUsername());
         response.setRole(user.getRole());
 
         return response;

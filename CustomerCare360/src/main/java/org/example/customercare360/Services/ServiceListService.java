@@ -18,31 +18,19 @@ public class ServiceListService {
 
     public List<ServiceDTO> getAllServices() {
 
-        List<ServiceEntity> services =
-                repository.findAll();
+        List<ServiceEntity> services = repository.findAll();
 
-        List<ServiceDTO> response =
-                new ArrayList<>();
+        List<ServiceDTO> response = new ArrayList<>();
 
         for (ServiceEntity service : services) {
 
-            ServiceDTO dto =
-                    new ServiceDTO();
+            ServiceDTO dto = new ServiceDTO();
 
-            dto.setServiceId(
-                    service.getServiceId());
-
-            dto.setServiceName(
-                    service.getServiceName());
-
-            dto.setProviderId(
-                    service.getProviderId());
-
-            dto.setPricePerCycle(
-                    service.getPricePerCycle());
-
-            dto.setCyclePeriod(
-                    service.getCyclePeriod());
+            dto.setServiceId(service.getServiceId());
+            dto.setServiceName(service.getServiceName());
+            dto.setProviderId(service.getProviderId());
+            dto.setPricePerCycle(service.getPricePerCycle());
+            dto.setCyclePeriod(service.getCyclePeriod());
 
             response.add(dto);
         }
@@ -50,13 +38,29 @@ public class ServiceListService {
         return response;
     }
 
-    public List<ServiceDTO>
-    getServicesByServiceName(
+    public ServiceDTO getServiceById(Integer id) {
+
+        ServiceEntity service = repository.findById(id)
+                .orElseThrow(() ->
+                        new ServiceNotFoundException(
+                                "Service not found"));
+
+        ServiceDTO dto = new ServiceDTO();
+
+        dto.setServiceId(service.getServiceId());
+        dto.setServiceName(service.getServiceName());
+        dto.setProviderId(service.getProviderId());
+        dto.setPricePerCycle(service.getPricePerCycle());
+        dto.setCyclePeriod(service.getCyclePeriod());
+
+        return dto;
+    }
+
+    public List<ServiceDTO> getServicesByServiceName(
             String serviceName) {
 
         List<ServiceEntity> services =
-                repository.findByServiceName(
-                        serviceName);
+                repository.findByServiceName(serviceName);
 
         if (services.isEmpty()) {
 
@@ -70,23 +74,45 @@ public class ServiceListService {
 
         for (ServiceEntity service : services) {
 
-            ServiceDTO dto =
-                    new ServiceDTO();
+            ServiceDTO dto = new ServiceDTO();
 
-            dto.setServiceId(
-                    service.getServiceId());
+            dto.setServiceId(service.getServiceId());
+            dto.setServiceName(service.getServiceName());
+            dto.setProviderId(service.getProviderId());
+            dto.setPricePerCycle(service.getPricePerCycle());
+            dto.setCyclePeriod(service.getCyclePeriod());
 
-            dto.setServiceName(
-                    service.getServiceName());
+            response.add(dto);
+        }
 
-            dto.setProviderId(
-                    service.getProviderId());
+        return response;
+    }
 
-            dto.setPricePerCycle(
-                    service.getPricePerCycle());
+    public List<ServiceDTO> getServicesByProviderId(
+            Integer providerId) {
 
-            dto.setCyclePeriod(
-                    service.getCyclePeriod());
+        List<ServiceEntity> services =
+                repository.findByProviderId(providerId);
+
+        if (services.isEmpty()) {
+
+            throw new ServiceNotFoundException(
+                    "Service not found with provider id : "
+                            + providerId);
+        }
+
+        List<ServiceDTO> response =
+                new ArrayList<>();
+
+        for (ServiceEntity service : services) {
+
+            ServiceDTO dto = new ServiceDTO();
+
+            dto.setServiceId(service.getServiceId());
+            dto.setServiceName(service.getServiceName());
+            dto.setProviderId(service.getProviderId());
+            dto.setPricePerCycle(service.getPricePerCycle());
+            dto.setCyclePeriod(service.getCyclePeriod());
 
             response.add(dto);
         }

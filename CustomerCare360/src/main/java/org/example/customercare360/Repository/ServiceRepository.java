@@ -10,6 +10,9 @@ import java.util.List;
 public interface ServiceRepository
         extends JpaRepository<ServiceEntity, Integer> {
 
-    List<ServiceEntity>
-    findByServiceName(String serviceName);
+    List<ServiceEntity> findByServiceName(
+            String serviceName);
+
+    List<ServiceEntity> findByProviderId(
+            Integer providerId);
 }

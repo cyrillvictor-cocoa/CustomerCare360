@@ -16,20 +16,35 @@ public class ServiceController {
     private ServiceListService service;
 
     @GetMapping
-    public ResponseEntity<List<ServiceDTO>>
-    getAllServices() {
+    public ResponseEntity<List<ServiceDTO>> getAllServices() {
 
         return ResponseEntity.ok(
                 service.getAllServices());
     }
 
-    @GetMapping("/{serviceName}")
+    @GetMapping("/{id}")
+    public ResponseEntity<ServiceDTO> getServiceById(
+            @PathVariable Integer id) {
+
+        return ResponseEntity.ok(
+                service.getServiceById(id));
+    }
+
+    @GetMapping("/name/{serviceName}")
     public ResponseEntity<List<ServiceDTO>>
     getServicesByServiceName(
             @PathVariable String serviceName) {
 
         return ResponseEntity.ok(
-                service.getServicesByServiceName(
-                        serviceName));
+                service.getServicesByServiceName(serviceName));
+    }
+
+    @GetMapping("/provider/{providerId}")
+    public ResponseEntity<List<ServiceDTO>>
+    getServicesByProviderId(
+            @PathVariable Integer providerId) {
+
+        return ResponseEntity.ok(
+                service.getServicesByProviderId(providerId));
     }
 }

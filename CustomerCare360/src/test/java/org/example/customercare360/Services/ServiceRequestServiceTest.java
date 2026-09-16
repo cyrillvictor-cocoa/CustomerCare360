@@ -1,5 +1,6 @@
 //package org.example.customercare360.Services;
 //
+//import org.example.customercare360.DTO.ServiceRequestDTO;
 //import org.example.customercare360.Entity.ServiceRequest;
 //import org.example.customercare360.Exception.ServiceRequestNotFoundException;
 //import org.example.customercare360.Repository.ServiceRequestRepository;
@@ -14,6 +15,7 @@
 //import java.util.Optional;
 //
 //import static org.junit.jupiter.api.Assertions.*;
+//import static org.mockito.ArgumentMatchers.any;
 //import static org.mockito.Mockito.*;
 //
 //@ExtendWith(MockitoExtension.class)
@@ -26,21 +28,52 @@
 //    private ServiceRequestService service;
 //
 //    @Test
-//    void testCreate() {
+//    void shouldCreateServiceRequest() {
 //
-//        ServiceRequest request = new ServiceRequest();
+//        ServiceRequestDTO dto = new ServiceRequestDTO();
+//        dto.setCustomerId(1);
+//        dto.setRequestType("NEWCONNECTION");
+//        dto.setPriority("HIGH");
+//        dto.setStatus("OPEN");
+//        dto.setServiceType("WATER");
+//        dto.setPremiseId(1);
+//        dto.setCreatedBy(1);
+//        dto.setModifiedBy(1);
+//
+//        ServiceRequest savedRequest = new ServiceRequest();
+//        savedRequest.setRequestId(1);
 //
 //        when(repository.save(any(ServiceRequest.class)))
-//                .thenReturn(request);
+//                .thenReturn(savedRequest);
 //
-//        ServiceRequest result = service.create(request);
+//        ServiceRequest result = service.create(dto);
 //
 //        assertNotNull(result);
-//        verify(repository, times(1)).save(request);
+//        assertEquals(1, result.getRequestId());
+//
+//        verify(repository, times(1))
+//                .save(any(ServiceRequest.class));
 //    }
 //
 //    @Test
-//    void testGetById() {
+//    void shouldReturnAllServiceRequests() {
+//
+//        ServiceRequest request1 = new ServiceRequest();
+//        ServiceRequest request2 = new ServiceRequest();
+//
+//        when(repository.findAll())
+//                .thenReturn(Arrays.asList(request1, request2));
+//
+//        List<ServiceRequest> result = service.getAll();
+//
+//        assertEquals(2, result.size());
+//
+//        verify(repository, times(1))
+//                .findAll();
+//    }
+//
+//    @Test
+//    void shouldReturnServiceRequestById() {
 //
 //        ServiceRequest request = new ServiceRequest();
 //        request.setRequestId(1);
@@ -50,46 +83,32 @@
 //
 //        ServiceRequest result = service.getById(1);
 //
+//        assertNotNull(result);
 //        assertEquals(1, result.getRequestId());
 //    }
 //
 //    @Test
-//    void testGetByIdThrowsException() {
+//    void shouldThrowExceptionWhenRequestNotFound() {
 //
-//        when(repository.findById(1))
+//        when(repository.findById(100))
 //                .thenReturn(Optional.empty());
 //
 //        assertThrows(
 //                ServiceRequestNotFoundException.class,
-//                () -> service.getById(1)
+//                () -> service.getById(100)
 //        );
 //    }
 //
 //    @Test
-//    void testGetAll() {
-//
-//        List<ServiceRequest> requests = Arrays.asList(
-//                new ServiceRequest(),
-//                new ServiceRequest()
-//        );
-//
-//        when(repository.findAll()).thenReturn(requests);
-//
-//        List<ServiceRequest> result = service.getAll();
-//
-//        assertEquals(2, result.size());
-//    }
-//
-//    @Test
-//    void testUpdate() {
+//    void shouldUpdateServiceRequest() {
 //
 //        ServiceRequest existing = new ServiceRequest();
 //        existing.setRequestId(1);
 //
-//        ServiceRequest updated = new ServiceRequest();
-//        updated.setPriority("HIGH");
-//        updated.setStatus("OPEN");
-//        updated.setModifiedBy(1);
+//        ServiceRequestDTO dto = new ServiceRequestDTO();
+//        dto.setPriority("HIGH");
+//        dto.setStatus("INPROGRESS");
+//        dto.setModifiedBy(2);
 //
 //        when(repository.findById(1))
 //                .thenReturn(Optional.of(existing));
@@ -98,7 +117,7 @@
 //                .thenReturn(existing);
 //
 //        ServiceRequest result =
-//                service.update(1, updated);
+//                service.update(1, dto);
 //
 //        assertNotNull(result);
 //
@@ -107,10 +126,25 @@
 //    }
 //
 //    @Test
-//    void testDelete() {
+//    void shouldThrowExceptionWhileUpdatingInvalidId() {
 //
-//        ServiceRequest request = new ServiceRequest();
-//        request.setRequestId(1);
+//        ServiceRequestDTO dto =
+//                new ServiceRequestDTO();
+//
+//        when(repository.findById(100))
+//                .thenReturn(Optional.empty());
+//
+//        assertThrows(
+//                ServiceRequestNotFoundException.class,
+//                () -> service.update(100, dto)
+//        );
+//    }
+//
+//    @Test
+//    void shouldDeleteServiceRequest() {
+//
+//        ServiceRequest request =
+//                new ServiceRequest();
 //
 //        when(repository.findById(1))
 //                .thenReturn(Optional.of(request));
@@ -122,14 +156,14 @@
 //    }
 //
 //    @Test
-//    void testDeleteThrowsException() {
+//    void shouldThrowExceptionWhileDeletingInvalidId() {
 //
-//        when(repository.findById(1))
+//        when(repository.findById(100))
 //                .thenReturn(Optional.empty());
 //
 //        assertThrows(
 //                ServiceRequestNotFoundException.class,
-//                () -> service.delete(1)
+//                () -> service.delete(100)
 //        );
 //    }
 //}

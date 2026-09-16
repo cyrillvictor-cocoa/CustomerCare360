@@ -53,6 +53,8 @@ public class ServiceOrderService {
         existing.setStatus(dto.getStatus());
         existing.setAssignedTo(dto.getAssignedTo());
         existing.setCompletionDate(dto.getCompletionDate());
+        existing.setScheduledDate(dto.getScheduledDate());
+        existing.setModifiedBy(dto.getModifiedBy());
 
         return repository.save(existing);
     }

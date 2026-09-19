@@ -30,6 +30,14 @@ public class BillingCycle {
     @Column(name = "ModifiedBy")
     private Integer modifiedBy;
 
+    public void setCycleId(Integer cycleId) {
+        this.cycleId = cycleId;
+    }
+
+    public Integer getCycleId() {
+        return cycleId;
+    }
+
     public ServiceType getServiceType() {
         return serviceType;
     }

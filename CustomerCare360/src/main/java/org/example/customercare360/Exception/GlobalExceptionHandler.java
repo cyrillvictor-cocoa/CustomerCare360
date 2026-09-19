@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.example.customercare360.Exception.ServiceRequestNotFoundException;
 import org.example.customercare360.Exception.ServiceOrderNotFoundException;
 import org.example.customercare360.Exception.ServiceNotFoundException;
@@ -68,5 +69,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String>handleServiceNotFound(ServiceNotFoundException ex) {
 
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String>
+    handleMethodArgumentTypeMismatch(
+            MethodArgumentTypeMismatchException ex) {
+
+        return new ResponseEntity<>(
+                "Invalid ID format. ID must be a number.",
+                HttpStatus.BAD_REQUEST);
     }
 }

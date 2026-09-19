@@ -1,7 +1,7 @@
 package org.example.customercare360.Controller;
 
-import org.example.customercare360.DTO.ServiceOrderDTO;
-import org.example.customercare360.Entity.ServiceOrder;
+import org.example.customercare360.DTO.ServiceOrderRequest;
+import org.example.customercare360.DTO.ServiceOrderResponse;
 import org.example.customercare360.Services.ServiceOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,23 +18,27 @@ public class ServiceOrderController {
     private ServiceOrderService service;
 
     @PostMapping
-    public ResponseEntity<ServiceOrder> create(
-            @RequestBody ServiceOrderDTO dto) {
+    public ResponseEntity<ServiceOrderResponse>
+    create(
+            @RequestBody ServiceOrderRequest request) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.create(dto));
+                .body(service.create(request));
     }
 
     @GetMapping
-    public ResponseEntity<List<ServiceOrder>> getAll() {
+    public ResponseEntity<
+            List<ServiceOrderResponse>>
+    getAll() {
 
         return ResponseEntity.ok(
                 service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceOrder> getById(
+    public ResponseEntity<ServiceOrderResponse>
+    getById(
             @PathVariable Integer id) {
 
         return ResponseEntity.ok(
@@ -42,12 +46,13 @@ public class ServiceOrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ServiceOrder> update(
+    public ResponseEntity<ServiceOrderResponse>
+    update(
             @PathVariable Integer id,
-            @RequestBody ServiceOrderDTO dto) {
+            @RequestBody ServiceOrderRequest request) {
 
         return ResponseEntity.ok(
-                service.update(id, dto));
+                service.update(id, request));
     }
 
     @DeleteMapping("/{id}")

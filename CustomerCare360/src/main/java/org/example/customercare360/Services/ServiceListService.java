@@ -1,13 +1,12 @@
 package org.example.customercare360.Services;
 
-import org.example.customercare360.DTO.ServiceDTO;
+import org.example.customercare360.DTO.ServiceResponse;
 import org.example.customercare360.Entity.ServiceEntity;
 import org.example.customercare360.Exception.ServiceNotFoundException;
 import org.example.customercare360.Repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,51 +15,33 @@ public class ServiceListService {
     @Autowired
     private ServiceRepository repository;
 
-    public List<ServiceDTO> getAllServices() {
+    public List<ServiceResponse> getAllServices() {
 
-        List<ServiceEntity> services = repository.findAll();
-
-        List<ServiceDTO> response = new ArrayList<>();
-
-        for (ServiceEntity service : services) {
-
-            ServiceDTO dto = new ServiceDTO();
-
-            dto.setServiceId(service.getServiceId());
-            dto.setServiceName(service.getServiceName());
-            dto.setProviderId(service.getProviderId());
-            dto.setPricePerCycle(service.getPricePerCycle());
-            dto.setCyclePeriod(service.getCyclePeriod());
-
-            response.add(dto);
-        }
-
-        return response;
+        return repository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    public ServiceDTO getServiceById(Integer id) {
+    public ServiceResponse getServiceById(
+            Integer id) {
 
-        ServiceEntity service = repository.findById(id)
-                .orElseThrow(() ->
-                        new ServiceNotFoundException(
-                                "Service not found"));
+        ServiceEntity service =
+                repository.findById(id)
+                        .orElseThrow(() ->
+                                new ServiceNotFoundException(
+                                        "Service not found"));
 
-        ServiceDTO dto = new ServiceDTO();
-
-        dto.setServiceId(service.getServiceId());
-        dto.setServiceName(service.getServiceName());
-        dto.setProviderId(service.getProviderId());
-        dto.setPricePerCycle(service.getPricePerCycle());
-        dto.setCyclePeriod(service.getCyclePeriod());
-
-        return dto;
+        return mapToResponse(service);
     }
 
-    public List<ServiceDTO> getServicesByServiceName(
+    public List<ServiceResponse>
+    getServicesByServiceName(
             String serviceName) {
 
         List<ServiceEntity> services =
-                repository.findByServiceName(serviceName);
+                repository.findByServiceName(
+                        serviceName);
 
         if (services.isEmpty()) {
 
@@ -69,30 +50,18 @@ public class ServiceListService {
                             + serviceName);
         }
 
-        List<ServiceDTO> response =
-                new ArrayList<>();
-
-        for (ServiceEntity service : services) {
-
-            ServiceDTO dto = new ServiceDTO();
-
-            dto.setServiceId(service.getServiceId());
-            dto.setServiceName(service.getServiceName());
-            dto.setProviderId(service.getProviderId());
-            dto.setPricePerCycle(service.getPricePerCycle());
-            dto.setCyclePeriod(service.getCyclePeriod());
-
-            response.add(dto);
-        }
-
-        return response;
+        return services.stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    public List<ServiceDTO> getServicesByProviderId(
+    public List<ServiceResponse>
+    getServicesByProviderId(
             Integer providerId) {
 
         List<ServiceEntity> services =
-                repository.findByProviderId(providerId);
+                repository.findByProviderId(
+                        providerId);
 
         if (services.isEmpty()) {
 
@@ -101,21 +70,31 @@ public class ServiceListService {
                             + providerId);
         }
 
-        List<ServiceDTO> response =
-                new ArrayList<>();
+        return services.stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
 
-        for (ServiceEntity service : services) {
+    private ServiceResponse mapToResponse(
+            ServiceEntity service) {
 
-            ServiceDTO dto = new ServiceDTO();
+        ServiceResponse response =
+                new ServiceResponse();
 
-            dto.setServiceId(service.getServiceId());
-            dto.setServiceName(service.getServiceName());
-            dto.setProviderId(service.getProviderId());
-            dto.setPricePerCycle(service.getPricePerCycle());
-            dto.setCyclePeriod(service.getCyclePeriod());
+        response.setServiceId(
+                service.getServiceId());
 
-            response.add(dto);
-        }
+        response.setServiceName(
+                service.getServiceName());
+
+        response.setProviderId(
+                service.getProviderId());
+
+        response.setPricePerCycle(
+                service.getPricePerCycle());
+
+        response.setCyclePeriod(
+                service.getCyclePeriod());
 
         return response;
     }

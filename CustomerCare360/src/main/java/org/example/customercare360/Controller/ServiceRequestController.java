@@ -1,7 +1,7 @@
 package org.example.customercare360.Controller;
 
-import org.example.customercare360.DTO.ServiceRequestDTO;
-import org.example.customercare360.Entity.ServiceRequest;
+import org.example.customercare360.DTO.ServiceRequestRequest;
+import org.example.customercare360.DTO.ServiceRequestResponse;
 import org.example.customercare360.Services.ServiceRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,34 +18,41 @@ public class ServiceRequestController {
     private ServiceRequestService service;
 
     @PostMapping
-    public ResponseEntity<ServiceRequest> create(
-            @RequestBody ServiceRequestDTO dto) {
+    public ResponseEntity<ServiceRequestResponse>
+    create(
+            @RequestBody ServiceRequestRequest request) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.create(dto));
+                .body(service.create(request));
     }
 
     @GetMapping
-    public ResponseEntity<List<ServiceRequest>> getAll() {
+    public ResponseEntity<
+            List<ServiceRequestResponse>>
+    getAll() {
 
-        return ResponseEntity.ok(service.getAll());
+        return ResponseEntity.ok(
+                service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceRequest> getById(
+    public ResponseEntity<ServiceRequestResponse>
+    getById(
             @PathVariable Integer id) {
 
-        return ResponseEntity.ok(service.getById(id));
+        return ResponseEntity.ok(
+                service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ServiceRequest> update(
+    public ResponseEntity<ServiceRequestResponse>
+    update(
             @PathVariable Integer id,
-            @RequestBody ServiceRequestDTO dto) {
+            @RequestBody ServiceRequestRequest request) {
 
         return ResponseEntity.ok(
-                service.update(id, dto));
+                service.update(id, request));
     }
 
     @DeleteMapping("/{id}")

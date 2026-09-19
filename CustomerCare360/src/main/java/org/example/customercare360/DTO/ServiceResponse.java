@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ServiceDTO {
+public class ServiceResponse {
 
     private Integer serviceId;
 

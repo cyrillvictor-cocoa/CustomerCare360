@@ -2,11 +2,15 @@ package org.example.customercare360.DTO;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ServiceOrderDTO {
+public class ServiceOrderResponse {
+
+    private Integer orderId;
+
     private Integer serviceAccountId;
 
     private Integer premiseId;

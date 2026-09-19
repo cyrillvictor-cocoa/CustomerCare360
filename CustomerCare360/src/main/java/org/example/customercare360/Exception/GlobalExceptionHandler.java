@@ -1,8 +1,10 @@
 package org.example.customercare360.Exception;
 
+import org.example.customercare360.DTO.AuthResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.example.customercare360.DTO.ApiErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -69,6 +71,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(AdjustmentAlreadyProcessedException.class)
+    public ResponseEntity<ApiErrorResponse>
+    handleAdjustmentAlreadyProcessedException(
+            AdjustmentAlreadyProcessedException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ApiErrorResponse(
+                        HttpStatus.CONFLICT.value(),
+                        ex.getMessage()));
+    }
+
+
+
+
+
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> ResourceNotFound(

@@ -20,7 +20,7 @@ public class Bill {
     @Column(name = "CycleId")
     private Integer cycleId;
 
-    @Column(name = "Usage")
+    @Column(name = "`Usage`")
     private String usage;
 
     @Column(name = "Amount")

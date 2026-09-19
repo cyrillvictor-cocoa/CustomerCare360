@@ -1,12 +1,17 @@
 package org.example.customercare360.Exception;
 
 import org.example.customercare360.DTO.AuthResponse;
+import org.example.customercare360.Exception.ServiceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.example.customercare360.DTO.ApiErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.example.customercare360.Exception.ServiceRequestNotFoundException;
+import org.example.customercare360.Exception.ServiceOrderNotFoundException;
+import org.example.customercare360.Exception.ServiceNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,6 +32,7 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 HttpStatus.CONFLICT);
     }
+
 
     @ExceptionHandler(EmailExists.class)
     public ResponseEntity<String> EmailExists(
@@ -65,6 +71,38 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NullCustomerType.class)
+    public ResponseEntity<String> NullCustomerTYpe(NullCustomerType ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ServiceRequestNotFoundException.class)
+    public ResponseEntity<String> handleServiceRequestNotFound(ServiceRequestNotFoundException ex){
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ServiceOrderNotFoundException.class)
+    public ResponseEntity<String> handleServiceOrderNotFound(ServiceOrderNotFoundException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(NotificationNotFound.class)
+    public ResponseEntity<String> NotificationIdNotFound(NotificationNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ServiceNotFoundException.class)
+    public ResponseEntity<String>handleServiceNotFound(ServiceNotFoundException ex) {
+
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String>
+    handleMethodArgumentTypeMismatch(
+            MethodArgumentTypeMismatchException ex) {
+
+        return new ResponseEntity<>(
+                "Invalid ID format. ID must be a number.",
+                HttpStatus.BAD_REQUEST);
     public ResponseEntity<String> NullCustomerTYpe(
             NullCustomerType ex) {
 

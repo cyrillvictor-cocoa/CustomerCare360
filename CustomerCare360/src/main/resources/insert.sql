@@ -1,14 +1,14 @@
 USE customercare360;
 
 -- USER
-INSERT INTO user(name,email,phone,UserName,password,CreatedBy,ModifiedBy)
+INSERT INTO user
+(name,email,phone,UserName,password,CreatedBy,ModifiedBy,Role)
 VALUES
-('John Smith','john@example.com','9876543210','johnsmith','pass123',NULL,NULL),
-('Alice Brown','alice@example.com','9876543211','alicebrown','pass123',1,1),
-('Michael Lee','michael@example.com','9876543212','michaellee','pass123',1,1),
-('Sarah Davis','sarah@example.com','9876543213','sarahdavis','pass123',2,2),
-('David Wilson','david@example.com','9876543214','davidwilson','pass123',3,3);
-
+    ('John Smith','john@example.com','9876543210','johnsmith','pass123',NULL,NULL,'ADMIN'),
+    ('Alice Brown','alice@example.com','9876543211','alicebrown','pass123',1,1,'USER'),
+    ('Michael Lee','michael@example.com','9876543212','michaellee','pass123',1,1,'AGENT'),
+    ('Sarah Davis','sarah@example.com','9876543213','sarahdavis','pass123',2,2,'BILL_OPT'),
+    ('David Wilson','david@example.com','9876543214','davidwilson','pass123',3,3,'USER');
 -- BILLINGCYCLE
 INSERT INTO billingcycle(ServiceType,PeriodStart,PeriodEnd,CreatedBy,ModifiedBy)
 VALUES

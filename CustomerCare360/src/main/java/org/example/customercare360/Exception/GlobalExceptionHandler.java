@@ -1,21 +1,13 @@
 package org.example.customercare360.Exception;
 
-import jakarta.persistence.ElementCollection;
-import org.example.customercare360.DTO.AuthResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.example.customercare360.DTO.AuthResponse;
-import org.example.customercare360.Exception.ServiceNotFoundException;
+
+import org.example.customercare360.DTO.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.example.customercare360.DTO.ApiErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.example.customercare360.Exception.ServiceRequestNotFoundException;
-import org.example.customercare360.Exception.ServiceOrderNotFoundException;
-import org.example.customercare360.Exception.ServiceNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -137,11 +129,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 "Invalid ID format. ID must be a number.",
                 HttpStatus.BAD_REQUEST);
-    public ResponseEntity<String> NullCustomerTYpe(
-            NullCustomerType ex) {
 
-        return ResponseEntity.badRequest()
-                .body(ex.getMessage());
     }
 
     @ExceptionHandler(AdjustmentAlreadyProcessedException.class)

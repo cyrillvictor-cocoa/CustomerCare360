@@ -1,11 +1,14 @@
 package org.example.customercare360.Entity;
 import jakarta.persistence.*;
+import org.example.customercare360.Enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.customercare360.Enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.naming.Name;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,7 +44,6 @@ public class User implements UserDetails {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "ModifiedBy")
     private User modifiedBy;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

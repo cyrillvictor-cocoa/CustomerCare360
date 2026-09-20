@@ -1,7 +1,6 @@
 package org.example.customercare360.Entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "serviceaccount")
@@ -15,6 +14,22 @@ public class ServiceAccount {
     @Column(name = "CustomerId")
     private Integer customerId;
 
+    @Column(name = "ServiceType")
+    private String serviceType;
+
+    @Column(name = "Status")
+    private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "CustomerId",
+            referencedColumnName = "UserId",
+            insertable = false,
+            updatable = false
+    )
+    private Customer customer;
+
+    // getters setters
     @Column(name = "StartDate")
     private LocalDateTime startDate;
 

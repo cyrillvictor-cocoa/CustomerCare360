@@ -1,5 +1,9 @@
 package org.example.customercare360.Exception;
 
+import jakarta.persistence.ElementCollection;
+import org.example.customercare360.DTO.AuthResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.example.customercare360.DTO.AuthResponse;
 import org.example.customercare360.Exception.ServiceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -80,6 +84,27 @@ public class GlobalExceptionHandler {
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AgentNotFound.class)
+    public ResponseEntity<String> AgentNotFound(AgentNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoServiceOrdersFound.class)
+    public ResponseEntity<String> handleServiceOrderNotFound(NoServiceOrdersFound ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(OrderTypeNotFound.class)
+    public ResponseEntity<String> handleOrderTypeNotFound(OrderTypeNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CustomerNotFound.class)
+    public ResponseEntity<String> handleCustomerNotFound(CustomerNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(ServiceOrderNotFoundException.class)
     public ResponseEntity<String> handleServiceOrderNotFound(ServiceOrderNotFoundException ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
@@ -87,6 +112,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotificationNotFound.class)
     public ResponseEntity<String> NotificationIdNotFound(NotificationNotFound ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(ServiceAccountNotFound.class)
+    public ResponseEntity<String> handleServiceAccountNotFound(ServiceAccountNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AgentNameNotFound.class)
+    public ResponseEntity<String> handleAgentNameNotFound(AgentNameNotFound ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ServiceNotFoundException.class)

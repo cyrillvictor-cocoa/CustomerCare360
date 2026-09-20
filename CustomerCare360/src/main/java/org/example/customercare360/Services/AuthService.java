@@ -3,7 +3,7 @@ package org.example.customercare360.Services;
 
 import org.example.customercare360.DTO.AuthResponse;
 import org.example.customercare360.DTO.LoginRequest;
-import org.example.customercare360.DTO.RegisterRequest;
+import org.example.customercare360.DTO.RegisterRequestDTO;
 import org.example.customercare360.Entity.Customer;
 import org.example.customercare360.Entity.User;
 import org.example.customercare360.Enums.CustomerStatus;
@@ -36,7 +36,7 @@ public class AuthService {
         //this.customerRepository = customerRepository;
     }
 
-    public User createUser (RegisterRequest request){
+    public User createUser (RegisterRequestDTO request){
         if(request.getRole()==Role.USER){
             Customer customer = new Customer();
             customer.setCustomerType(request.getCustomerType());
@@ -48,7 +48,7 @@ public class AuthService {
         }
     }
 
-    public AuthResponse register(RegisterRequest request)throws EmailExists,UserNameExists,NullCustomerType{
+    public AuthResponse register(RegisterRequestDTO request)throws EmailExists,UserNameExists,NullCustomerType{
         if(userRepository.existsByEmail(request.getEmail())) throw new EmailExists("User already registered using this email");
         if(userRepository.existsByUsername(request.getUsername())) throw new UserNameExists("UserName is already registered");
         if(request.getRole() == Role.USER && request.getCustomerType()==null) throw new NullCustomerType("CustomerType cant be null!!");

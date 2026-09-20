@@ -36,42 +36,44 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
-            if(!request.getServletPath().equals("/login") && !request.getServletPath().equals("/signup")){
-                try {
-                    String authHeader =
-                            request.getHeader("Authorization");
+        String path = request.getServletPath();
 
-                    if (authHeader != null &&
-                            authHeader.startsWith("Bearer ")) {
+        if(!request.getServletPath().equals("/login") && !request.getServletPath().equals("/signup") && !path.startsWith("/swagger-ui") && !path.startsWith("/v3/api-docs") ){
+            try {
+                String authHeader =
+                        request.getHeader("Authorization");
 
-                        String token = authHeader.substring(7);
+                if (authHeader != null &&
+                        authHeader.startsWith("Bearer ")) {
 
-                        if (jwtService.validateToken(token)) {
+                    String token = authHeader.substring(7);
 
-                            String username =
-                                    jwtService.extractUserName(token);
+                    if (jwtService.validateToken(token)) {
 
-                            String role = jwtService.extractRole(token);
+                        String username =
+                                jwtService.extractUserName(token);
 
-                            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
+                        String role = jwtService.extractRole(token);
 
-                            UsernamePasswordAuthenticationToken auth =
-                                    new UsernamePasswordAuthenticationToken(
-                                            username,
-                                            null,
-                                            authorities);
-                            {
-                                SecurityContextHolder.getContext()
-                                        .setAuthentication(auth);
-                            }
+                        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
+
+                        UsernamePasswordAuthenticationToken auth =
+                                new UsernamePasswordAuthenticationToken(
+                                        username,
+                                        null,
+                                        authorities);
+                        {
+                            SecurityContextHolder.getContext()
+                                    .setAuthentication(auth);
                         }
-                    }else throw new InvalidToken("Authorization Token missing");
-                } catch (InvalidToken e) {
-                    resolver.resolveException(request,response,null,e);
-                }
+                    }
+                }else throw new InvalidToken("Authorization Token missing");
+            } catch (InvalidToken e) {
+                resolver.resolveException(request,response,null,e);
             }
+        }
 
-            filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);
 
 
     }

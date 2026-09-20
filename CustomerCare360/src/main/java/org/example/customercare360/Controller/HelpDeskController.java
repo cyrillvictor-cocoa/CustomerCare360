@@ -1,7 +1,9 @@
 package org.example.customercare360.Controller;
 
 import org.example.customercare360.DTO.*;
-import org.example.customercare360.Services.HelpDeskService;
+import org.example.customercare360.Services.ComplaintServices;
+import org.example.customercare360.Services.FAQService;
+import org.example.customercare360.Services.BillAdjustmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,34 +14,54 @@ import java.util.List;
 public class HelpDeskController {
 
     @Autowired
-    private HelpDeskService helpDeskService;
+    private BillAdjustmentService helpDeskService;
 
 
 
-    @GetMapping("/faqs")
-    public List<FaqResponse> getFaqs() {
 
-        return helpDeskService.getFaqs();
-    }
 
+
+        @Autowired
+        private FAQService faqService;
+
+        @GetMapping("/faqs")
+        public List<FaqResponse> getFaqs() {
+            return faqService.getFaqs();
+        }
+
+
+    @Autowired
+    private ComplaintServices complaintServices;
     @GetMapping("/complaints")
     public List<ComplaintResponse> getComplaints() {
 
-        return helpDeskService.getComplaints();
+        return complaintServices.getComplaints();
     }
 
     @PostMapping("/complaints")
     public ComplaintResponse createComplaint(
             @RequestBody ComplaintRequest request) {
 
-        return helpDeskService.createComplaint(request);
+        return complaintServices.createComplaint(request);
     }
-    @GetMapping("/billadjustments")
+
+    @PutMapping("/complaints/{complaintId}")
+    public ComplaintResponse updateComplaintStatus(
+            @PathVariable Integer complaintId,
+            @RequestBody ComplaintStatusUpdateRequest request) {
+
+        return complaintServices.updateComplaintStatus(
+                complaintId,
+                request.getStatus());
+    }
+
+    @GetMapping("/billadjustments/{billId}")
     public List<BillAdjustmentResponse>
-    getBillAdjustments() {
+    getBillAdjustments(
+            @PathVariable Integer billId) {
 
         return helpDeskService
-                .getBillAdjustments();
+                .getBillAdjustments(billId);
     }
 
     @PostMapping("/billadjustments")
@@ -50,6 +72,24 @@ public class HelpDeskController {
 
         return helpDeskService
                 .createBillAdjustment(request);
+    }
+
+    @GetMapping("/billadjustments/adminview")
+    public List<BillAdjustmentAdminViewResponse>
+    getAllBillAdjustmentsForAdmin() {
+
+        return helpDeskService
+                .getAllBillAdjustmentsForAdmin();
+    }
+
+    @PutMapping("/billadjustments/{adjustmentId}")
+    public BillAdjustmentResponse updateBillAdjustment(
+            @PathVariable Integer adjustmentId,
+            @RequestBody BillAdjustmentUpdateRequest request) {
+
+        return helpDeskService.updateBillAdjustment(
+                adjustmentId,
+                request);
     }
 
 

@@ -20,7 +20,7 @@ public class Bill {
     @Column(name = "CycleId")
     private Integer cycleId;
 
-    @Column(name = "Usage")
+    @Column(name = "`Usage`")
     private String usage;
 
     @Column(name = "Amount")
@@ -77,5 +77,21 @@ public class Bill {
 
     public void setStatus(BillStatus status) {
         this.status = status;
+    }
+
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    public void setCycleId(Integer cycleId) {
+        this.cycleId = cycleId;
+    }
+
+    public Integer getCycleId() {
+        return cycleId;
+    }
+
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 }

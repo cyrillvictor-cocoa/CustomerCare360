@@ -5,6 +5,8 @@ import org.example.customercare360.Entity.BillingCycle;
 import org.example.customercare360.Enums.ServiceType;
 import org.example.customercare360.Repository.BillingCycleRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -26,14 +28,9 @@ public class BillingCycleServiceImpl
 
         BillingCycle cycle = new BillingCycle();
 
-        cycle.setServiceType(
-                request.getServiceType());
-
-        cycle.setPeriodStart(
-                request.getPeriodStart());
-
-        cycle.setPeriodEnd(
-                request.getPeriodEnd());
+        cycle.setServiceType(request.getServiceType());
+        cycle.setPeriodStart(request.getPeriodStart());
+        cycle.setPeriodEnd(request.getPeriodEnd());
 
         return repository.save(cycle);
     }
@@ -49,18 +46,11 @@ public class BillingCycleServiceImpl
             Integer cycleId,
             BillingCycleRequest request){
 
-        BillingCycle cycle =
-                repository.findById(cycleId)
-                        .orElseThrow();
+        BillingCycle cycle = repository.findById(cycleId).orElseThrow();
 
-        cycle.setServiceType(
-                request.getServiceType());
-
-        cycle.setPeriodStart(
-                request.getPeriodStart());
-
-        cycle.setPeriodEnd(
-                request.getPeriodEnd());
+        cycle.setServiceType(request.getServiceType());
+        cycle.setPeriodStart(request.getPeriodStart());
+        cycle.setPeriodEnd(request.getPeriodEnd());
 
         repository.save(cycle);
 

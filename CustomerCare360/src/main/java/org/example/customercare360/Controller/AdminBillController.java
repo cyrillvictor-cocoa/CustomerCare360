@@ -1,6 +1,7 @@
 package org.example.customercare360.Controller;
 
 import org.example.customercare360.DTO.BillResponse;
+import org.example.customercare360.DTO.CreateBillRequest;
 import org.example.customercare360.DTO.UpdateBillRequest;
 import org.example.customercare360.Services.BillService;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,23 @@ public class AdminBillController {
         this.billService = billService;
     }
 
+    @PostMapping("/add")
+    public String createBill(
+            @RequestBody CreateBillRequest request) {
+
+        return billService.createBill(request);
+    }
+
     @GetMapping
     public List<BillResponse> getAllBills() {
         return billService.getAllBills();
+    }
+
+    @GetMapping("/{billId}")
+    public BillResponse getBillById(
+            @PathVariable Integer billId) {
+
+        return billService.getBillById(billId);
     }
 
     @PutMapping("/{billId}")

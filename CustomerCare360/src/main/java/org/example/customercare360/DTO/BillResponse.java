@@ -1,14 +1,16 @@
 package org.example.customercare360.DTO;
 
+import java.time.LocalDateTime;
+
 public class BillResponse {
 
     private Integer billId;
-    private String billName;
+    private Integer accountId;
+    //private Integer cycleId;
+    private String usage;
     private Double amount;
+    private LocalDateTime dueDate;
     private String status;
-
-    public BillResponse() {
-    }
 
     public Integer getBillId() {
         return billId;
@@ -18,12 +20,28 @@ public class BillResponse {
         this.billId = billId;
     }
 
-    public String getBillName() {
-        return billName;
+    public Integer getAccountId() {
+        return accountId;
     }
 
-    public void setBillName(String billName) {
-        this.billName = billName;
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
+    }
+
+//    public Integer getCycleId() {
+//        return cycleId;
+//    }
+//
+//    public void setCycleId(Integer cycleId) {
+//        this.cycleId = cycleId;
+//    }
+
+    public String getUsage() {
+        return usage;
+    }
+
+    public void setUsage(String usage) {
+        this.usage = usage;
     }
 
     public Double getAmount() {
@@ -32,6 +50,14 @@ public class BillResponse {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public LocalDateTime getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDateTime dueDate) {
+        this.dueDate = dueDate;
     }
 
     public String getStatus() {

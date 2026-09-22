@@ -5,9 +5,16 @@ import java.util.stream.Collectors;
 
 import org.example.customercare360.DTO.ServiceAccountRequest;
 import org.example.customercare360.DTO.ServiceAccountResponse;
+import org.example.customercare360.Entity.Customer;
+import org.example.customercare360.Entity.Premise;
 import org.example.customercare360.Entity.ServiceAccount;
+import org.example.customercare360.Entity.User;
 import org.example.customercare360.Exception.ResourceNotFoundException;
+import org.example.customercare360.Exception.UserNotFound;
+import org.example.customercare360.Repository.CustomerRepository;
+import org.example.customercare360.Repository.PremiseRepository;
 import org.example.customercare360.Repository.ServiceAccountRepository;
+import org.example.customercare360.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +23,15 @@ public class ServiceAccountService {
 
     @Autowired
     private ServiceAccountRepository serviceAccountRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private PremiseRepository premiseRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // GET ALL
     public List<ServiceAccountResponse> getAllServiceAccounts() {
@@ -43,16 +59,20 @@ public class ServiceAccountService {
     public ServiceAccountResponse createServiceAccount(
             ServiceAccountRequest request) {
 
+        Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(()->new ResourceNotFoundException("The customer id is not found!!"));
+        Premise premise = premiseRepository.findById(request.getPremiseId()).orElseThrow(()-> new ResourceNotFoundException("Premise Id not found!!"));
+        User createdBy = userRepository.findById(request.getCreatedBy()).orElse(null);
+        User modifiedBy = userRepository.findById(request.getModifiedBy()).orElse(null);
         ServiceAccount serviceAccount = new ServiceAccount();
 
-        serviceAccount.setCustomerId(request.getCustomerId());
+        serviceAccount.setCustomer(customer);
         serviceAccount.setStartDate(request.getStartDate());
         serviceAccount.setServiceType(request.getServiceType());
         serviceAccount.setEndDate(request.getEndDate());
         serviceAccount.setStatus(request.getStatus());
-        serviceAccount.setPremiseId(request.getPremiseId());
-        serviceAccount.setCreatedBy(request.getCreatedBy());
-        serviceAccount.setModifiedBy(request.getModifiedBy());
+        serviceAccount.setPremise(premise);
+        if(createdBy!=null)serviceAccount.setCreatedBy(createdBy);
+        if(modifiedBy!=null)serviceAccount.setModifiedBy(modifiedBy);
 
         ServiceAccount saved =
                 serviceAccountRepository.save(serviceAccount);
@@ -62,24 +82,27 @@ public class ServiceAccountService {
 
     // UPDATE
     public ServiceAccountResponse updateServiceAccount(
-            Integer accountId,
             ServiceAccountRequest request) {
 
         ServiceAccount existing =
-                serviceAccountRepository.findById(accountId)
+                serviceAccountRepository.findById(request.getAccountId())
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "Service Account not found with id: "
-                                                + accountId));
+                                                + request.getAccountId()));
+        Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(()->new ResourceNotFoundException("The customer id is not found!!"));
+        Premise premise = premiseRepository.findById(request.getPremiseId()).orElseThrow(()-> new ResourceNotFoundException("Premise Id not found!!"));
+        User createdBy = userRepository.findById(request.getCreatedBy()).orElse(null);
+        User modifiedBy = userRepository.findById(request.getModifiedBy()).orElse(null);
 
-        existing.setCustomerId(request.getCustomerId());
+        existing.setCustomer(customer);
         existing.setStartDate(request.getStartDate());
         existing.setServiceType(request.getServiceType());
         existing.setEndDate(request.getEndDate());
         existing.setStatus(request.getStatus());
-        existing.setPremiseId(request.getPremiseId());
-        existing.setCreatedBy(request.getCreatedBy());
-        existing.setModifiedBy(request.getModifiedBy());
+        existing.setPremise(premise);
+        if(createdBy!=null)existing.setCreatedBy(createdBy);
+        if(modifiedBy!=null)existing.setModifiedBy(modifiedBy);
 
         ServiceAccount updated =
                 serviceAccountRepository.save(existing);
@@ -107,14 +130,14 @@ public class ServiceAccountService {
                 new ServiceAccountResponse();
 
         response.setAccountId(serviceAccount.getAccountId());
-        response.setCustomerId(serviceAccount.getCustomerId());
+        response.setCustomerId(serviceAccount.getCustomer().getUserId());
         response.setStartDate(serviceAccount.getStartDate());
         response.setServiceType(serviceAccount.getServiceType());
         response.setEndDate(serviceAccount.getEndDate());
         response.setStatus(serviceAccount.getStatus());
-        response.setPremiseId(serviceAccount.getPremiseId());
-        response.setCreatedBy(serviceAccount.getCreatedBy());
-        response.setModifiedBy(serviceAccount.getModifiedBy());
+        response.setPremiseId(serviceAccount.getPremise().getPremiseId());
+        if(serviceAccount.getCreatedBy()!=null)response.setCreatedBy(serviceAccount.getCreatedBy().getUserId());
+        if(serviceAccount.getModifiedBy()!=null)response.setModifiedBy(serviceAccount.getModifiedBy().getUserId());
 
         return response;
     }

@@ -112,7 +112,6 @@ class ServiceAccountControllerTest {
         ServiceAccountRequest request =
                 new ServiceAccountRequest();
 
-        request.setCustomerId(16);
 
         ServiceAccountResponse response =
                 new ServiceAccountResponse();
@@ -120,13 +119,11 @@ class ServiceAccountControllerTest {
         response.setAccountId(1);
 
         when(serviceAccountService.updateServiceAccount(
-                eq(1),
                 any(ServiceAccountRequest.class)))
                 .thenReturn(response);
 
         ServiceAccountResponse result =
                 serviceAccountController.updateServiceAccount(
-                        1,
                         request);
 
         assertNotNull(result);
@@ -136,7 +133,6 @@ class ServiceAccountControllerTest {
         verify(serviceAccountService,
                 times(1))
                 .updateServiceAccount(
-                        eq(1),
                         any(ServiceAccountRequest.class));
     }
 

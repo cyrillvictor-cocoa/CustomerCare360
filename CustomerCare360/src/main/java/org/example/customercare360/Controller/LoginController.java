@@ -1,5 +1,6 @@
 package org.example.customercare360.Controller;
 
+import jakarta.validation.Valid;
 import org.example.customercare360.DTO.LoginRequest;
 import org.example.customercare360.DTO.AuthResponse;
 import org.example.customercare360.Services.AuthService;
@@ -20,7 +21,7 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<AuthResponse> login(
-            @RequestBody LoginRequest request) {
+            @Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
 
     }

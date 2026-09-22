@@ -14,7 +14,7 @@ import java.util.List;
 public class HelpDeskController {
 
     @Autowired
-    private BillAdjustmentService helpDeskService;
+    private BillAdjustmentService billAdjustmentService;
 
 
 
@@ -60,7 +60,7 @@ public class HelpDeskController {
     getBillAdjustments(
             @PathVariable Integer billId) {
 
-        return helpDeskService
+        return billAdjustmentService
                 .getBillAdjustments(billId);
     }
 
@@ -70,7 +70,7 @@ public class HelpDeskController {
             @RequestBody
             BillAdjustmentRequest request) {
 
-        return helpDeskService
+        return billAdjustmentService
                 .createBillAdjustment(request);
     }
 
@@ -78,7 +78,7 @@ public class HelpDeskController {
     public List<BillAdjustmentAdminViewResponse>
     getAllBillAdjustmentsForAdmin() {
 
-        return helpDeskService
+        return billAdjustmentService
                 .getAllBillAdjustmentsForAdmin();
     }
 
@@ -87,7 +87,7 @@ public class HelpDeskController {
             @PathVariable Integer adjustmentId,
             @RequestBody BillAdjustmentUpdateRequest request) {
 
-        return helpDeskService.updateBillAdjustment(
+        return billAdjustmentService.updateBillAdjustment(
                 adjustmentId,
                 request);
     }

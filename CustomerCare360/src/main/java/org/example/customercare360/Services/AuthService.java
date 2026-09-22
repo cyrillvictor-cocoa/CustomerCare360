@@ -3,7 +3,7 @@ package org.example.customercare360.Services;
 
 import org.example.customercare360.DTO.AuthResponse;
 import org.example.customercare360.DTO.LoginRequest;
-import org.example.customercare360.DTO.RegisterRequestDTO;
+import org.example.customercare360.DTO.RegisterRequest;
 import org.example.customercare360.Entity.Customer;
 import org.example.customercare360.Entity.User;
 import org.example.customercare360.Enums.CustomerStatus;
@@ -16,8 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 
@@ -36,7 +34,7 @@ public class AuthService {
         //this.customerRepository = customerRepository;
     }
 
-    public User createUser (RegisterRequestDTO request){
+    public User createUser (RegisterRequest request){
         if(request.getRole()==Role.USER){
             Customer customer = new Customer();
             customer.setCustomerType(request.getCustomerType());
@@ -48,7 +46,7 @@ public class AuthService {
         }
     }
 
-    public AuthResponse register(RegisterRequestDTO request)throws EmailExists,UserNameExists,NullCustomerType{
+    public AuthResponse register(RegisterRequest request)throws EmailExists,UserNameExists,NullCustomerType{
         if(userRepository.existsByEmail(request.getEmail())) throw new EmailExists("User already registered using this email");
         if(userRepository.existsByUsername(request.getUsername())) throw new UserNameExists("UserName is already registered");
         if(request.getRole() == Role.USER && request.getCustomerType()==null) throw new NullCustomerType("CustomerType cant be null!!");
@@ -59,6 +57,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());
+
         userRepository.save(user);
 
         return new AuthResponse("Registered Successfully",jwtService.generateToken(user),user.getRole().name());

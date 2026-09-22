@@ -1,6 +1,7 @@
 package org.example.customercare360.Controller;
 
-import org.example.customercare360.DTO.RegisterRequestDTO;
+import org.example.customercare360.DTO.RegisterRequest;
+import jakarta.validation.Valid;
 import org.example.customercare360.DTO.AuthResponse;
 import org.example.customercare360.Services.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class SignUpController {
 
     @PostMapping
     public ResponseEntity<AuthResponse> signup(
-            @RequestBody RegisterRequestDTO request) {
+            @Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 }

@@ -1,10 +1,18 @@
 package org.example.customercare360.DTO;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class ServiceAccountRequest {
 
     private Integer customerId;
+    private Integer accountId;
     private LocalDateTime startDate;
     private String serviceType;
     private LocalDateTime endDate;
@@ -13,70 +21,4 @@ public class ServiceAccountRequest {
     private Integer createdBy;
     private Integer modifiedBy;
 
-    public ServiceAccountRequest() {
-    }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Integer getPremiseId() {
-        return premiseId;
-    }
-
-    public void setPremiseId(Integer premiseId) {
-        this.premiseId = premiseId;
-    }
-
-    public Integer getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Integer createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Integer getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(Integer modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
 }

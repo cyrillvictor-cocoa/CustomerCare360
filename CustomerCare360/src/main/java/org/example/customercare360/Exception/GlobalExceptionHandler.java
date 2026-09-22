@@ -1,21 +1,18 @@
 package org.example.customercare360.Exception;
 
-import jakarta.persistence.ElementCollection;
-import org.example.customercare360.DTO.AuthResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.example.customercare360.DTO.AuthResponse;
-import org.example.customercare360.Exception.ServiceNotFoundException;
+
+import org.example.customercare360.DTO.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.example.customercare360.DTO.ApiErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.example.customercare360.Exception.ServiceRequestNotFoundException;
-import org.example.customercare360.Exception.ServiceOrderNotFoundException;
-import org.example.customercare360.Exception.ServiceNotFoundException;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,6 +25,17 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    @ExceptionHandler(UnrecognizedPropertyException.class)
+    public ResponseEntity<String> UnrecognizedProperty(UnrecognizedPropertyException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String,String>> MethodArgument(MethodArgumentNotValidException ex){
+        Map<String,String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error-> errors.put(error.getField(),error.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
+    }
     @ExceptionHandler(UserNameExists.class)
     public ResponseEntity<String> UserNameExists(
             UserNameExists ex) {
@@ -137,11 +145,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 "Invalid ID format. ID must be a number.",
                 HttpStatus.BAD_REQUEST);
-    public ResponseEntity<String> NullCustomerTYpe(
-            NullCustomerType ex) {
 
-        return ResponseEntity.badRequest()
-                .body(ex.getMessage());
     }
 
     @ExceptionHandler(AdjustmentAlreadyProcessedException.class)

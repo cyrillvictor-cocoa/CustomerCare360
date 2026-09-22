@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `customercare360`.`billingcycle` (
 CREATE TABLE IF NOT EXISTS `customercare360`.`customer` (
                                                             `CustomerType` ENUM('RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL') NOT NULL,
     `ContactInfo` VARCHAR(45) NULL DEFAULT NULL,
-    `Status` ENUM('ACTIVE', 'INACTVIE') NOT NULL,
+    `Status` ENUM('ACTIVE', 'INACTIVE') NOT NULL,
     `UserId` INT NOT NULL,
     `CreatedBy` INT NULL DEFAULT NULL,
     `ModifiedBy` INT NULL DEFAULT NULL,
@@ -251,6 +251,9 @@ CREATE TABLE IF NOT EXISTS `customercare360`.`complaint` (
     `Status` ENUM('OPEN', 'INPROGRESS', 'RESOLVED', 'CLOSED') NOT NULL,
     `CreatedBy` INT NULL DEFAULT NULL,
     `ModifiedBy` INT NULL DEFAULT NULL,
+    `created_at` DATETIME ,
+    `resolved_at` DATETIME ,
+    `sla_hours` INT,
     PRIMARY KEY (`ComplaintId`),
     INDEX `CreatedBy_Complaint_FK_idx` (`CreatedBy` ASC) VISIBLE,
     INDEX `ModifiedBy_Complaint_FK_idx` (`ModifiedBy` ASC) VISIBLE,
@@ -481,6 +484,40 @@ CREATE TABLE IF NOT EXISTS `customercare360`.`servicerequest` (
     DEFAULT CHARACTER SET = utf8mb4
     COLLATE = utf8mb4_0900_ai_ci;
 
+CREATE OR REPLACE VIEW vw_field_agent_orders AS
+SELECT
+    so.OrderId,
+
+    c.UserId AS CustomerId,
+
+    uc.Name AS CustomerName,
+    uc.Phone AS CustomerPhone,
+
+    sa.AccountId,
+    sa.ServiceType,
+    sa.Status AS AccountStatus,
+
+    so.OrderType,
+    so.ScheduledDate,
+    so.CompletionDate,
+    so.Status AS OrderStatus,
+
+    ua.UserId AS AgentId,
+    ua.Name AS AgentName
+
+FROM serviceorder so
+
+         INNER JOIN serviceaccount sa
+                    ON so.ServiceAccountID = sa.AccountId
+
+         INNER JOIN customer c
+                    ON sa.CustomerId = c.UserId
+
+         INNER JOIN user uc
+                    ON c.UserId = uc.UserId
+
+         LEFT JOIN user ua
+                   ON so.AssignedTo = ua.UserId;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

@@ -38,13 +38,11 @@
         }
 
         // UPDATE SERVICE ACCOUNT
-        @PutMapping("/{accountId}")
+        @PutMapping()
         public ServiceAccountResponse updateServiceAccount(
-                @PathVariable Integer accountId,
                 @RequestBody ServiceAccountRequest request) {
 
             return serviceAccountService.updateServiceAccount(
-                    accountId,
                     request);
         }
 

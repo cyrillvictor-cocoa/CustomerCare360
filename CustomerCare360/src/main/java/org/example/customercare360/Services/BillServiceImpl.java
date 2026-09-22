@@ -59,7 +59,13 @@ public class BillServiceImpl implements BillService {
             response.setBillId(bill.getBillId());
             response.setAccountId(bill.getAccountId());
             response.setUsage(bill.getUsage());
-            response.setAmount(bill.getAmount());
+
+            int units = Integer.parseInt(bill.getUsage());
+            double ratePerUnit = 9.0;
+            double amount = units * ratePerUnit;
+            bill.setAmount(amount);
+
+            //response.setAmount(bill.getAmount());
             response.setDueDate(bill.getDueDate());
             response.setStatus(bill.getStatus().name());
             responseList.add(response);

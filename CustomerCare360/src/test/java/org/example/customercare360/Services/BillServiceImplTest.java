@@ -55,10 +55,7 @@ class BillServiceImplTest {
         String result =
                 billService.createBill(request);
 
-        assertEquals(
-                "Bill Created Successfully",
-                result
-        );
+        assertEquals("Bill Created Successfully", result);
 
         verify(billRepository, times(1))
                 .save(any(Bill.class));
@@ -80,20 +77,13 @@ class BillServiceImplTest {
         when(billRepository.findAll())
                 .thenReturn(List.of(bill));
 
-        List<BillResponse> result =
-                billService.getAllBills();
+        List<BillResponse> result = billService.getAllBills();
 
         assertEquals(1, result.size());
 
-        assertEquals(
-                1,
-                result.get(0).getBillId()
-        );
+        assertEquals(1, result.get(0).getBillId());
 
-        assertEquals(
-                1200.50,
-                result.get(0).getAmount()
-        );
+        assertEquals(1200.50, result.get(0).getAmount());
     }
 
     @Test

@@ -22,5 +22,4 @@ public class BillingController {
 
         return billService.getCustomerBills(accountId);
     }
-
 }

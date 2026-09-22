@@ -3,6 +3,8 @@ package org.example.customercare360.Services;
 import org.example.customercare360.DTO.BillingCycleRequest;
 import org.example.customercare360.Entity.BillingCycle;
 import org.example.customercare360.Enums.ServiceType;
+import org.example.customercare360.Exception.BillingCycleNotFoundException;
+import org.example.customercare360.Exception.InvalidAccountException;
 import org.example.customercare360.Repository.BillingCycleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
@@ -11,14 +13,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-public class BillingCycleServiceImpl
-        implements BillingCycleService {
+public class BillingCycleServiceImpl implements BillingCycleService {
 
     private final BillingCycleRepository repository;
 
-    public BillingCycleServiceImpl(
-            BillingCycleRepository repository){
-
+    public BillingCycleServiceImpl(BillingCycleRepository repository){
         this.repository = repository;
     }
 
@@ -31,6 +30,14 @@ public class BillingCycleServiceImpl
         cycle.setServiceType(request.getServiceType());
         cycle.setPeriodStart(request.getPeriodStart());
         cycle.setPeriodEnd(request.getPeriodEnd());
+
+//        if(!serviceAccountRepository.existsById(
+//                request.getAccountId())) {
+//
+//            throw new InvalidAccountException(
+//                    "Account Id does not exist"
+//            );
+//        }
 
         return repository.save(cycle);
     }
@@ -46,7 +53,10 @@ public class BillingCycleServiceImpl
             Integer cycleId,
             BillingCycleRequest request){
 
-        BillingCycle cycle = repository.findById(cycleId).orElseThrow();
+        BillingCycle cycle = repository.findById(cycleId)
+                .orElseThrow(() ->
+                        new BillingCycleNotFoundException(
+                                "Billing Cycle not found with id " + cycleId));
 
         cycle.setServiceType(request.getServiceType());
         cycle.setPeriodStart(request.getPeriodStart());
@@ -60,6 +70,11 @@ public class BillingCycleServiceImpl
     @Override
     public String deleteCycle(
             Integer cycleId){
+
+        if(!repository.existsById(cycleId)) {
+            throw new BillingCycleNotFoundException(
+                    "Billing Cycle not found with id " + cycleId);
+        }
 
         repository.deleteById(cycleId);
 

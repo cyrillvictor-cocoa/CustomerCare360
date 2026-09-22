@@ -3,6 +3,7 @@ package org.example.customercare360.Services;
 import org.example.customercare360.DTO.*;
 import org.example.customercare360.Entity.Bill;
 import org.example.customercare360.Enums.BillStatus;
+import org.example.customercare360.Exception.BillNotFoundException;
 import org.example.customercare360.Repository.BillRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,12 @@ public class BillServiceImpl implements BillService {
         bill.setAccountId(request.getAccountId());
         bill.setCycleId(request.getCycleId());
         bill.setUsage(request.getUsage());
-        bill.setAmount(request.getAmount());
+
+        int units = Integer.parseInt(request.getUsage());
+        double ratePerUnit = 9.0;
+        double amount = units * ratePerUnit;
+
+        bill.setAmount(amount);
         bill.setDueDate(request.getDueDate());
         bill.setStatus(BillStatus.GENERATED);
 
@@ -39,6 +45,10 @@ public class BillServiceImpl implements BillService {
     public List<BillResponse> getCustomerBills(Integer accountId) {
 
         List<Bill> bills = billRepository.findByAccountId(accountId);
+        if(bills.isEmpty()) {
+            throw new BillNotFoundException(
+                    "No bills found for account id " + accountId);
+        }
 
         List<BillResponse> responseList = new ArrayList<>();
 
@@ -49,7 +59,13 @@ public class BillServiceImpl implements BillService {
             response.setBillId(bill.getBillId());
             response.setAccountId(bill.getAccountId());
             response.setUsage(bill.getUsage());
-            response.setAmount(bill.getAmount());
+
+            int units = Integer.parseInt(bill.getUsage());
+            double ratePerUnit = 9.0;
+            double amount = units * ratePerUnit;
+            bill.setAmount(amount);
+
+            //response.setAmount(bill.getAmount());
             response.setDueDate(bill.getDueDate());
             response.setStatus(bill.getStatus().name());
             responseList.add(response);
@@ -110,7 +126,10 @@ public class BillServiceImpl implements BillService {
             Integer billId,
             UpdateBillRequest request) {
 
-        Bill bill = billRepository.findById(billId).orElseThrow();
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() ->
+                        new BillNotFoundException(
+                                "Bill not found with id " + billId));
 
         bill.setUsage(request.getUsage());
         bill.setAmount(request.getAmount());
